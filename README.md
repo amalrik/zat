@@ -14,9 +14,11 @@ Ruby 4.1 built with ZJIT. See [docs/toolchain.md](docs/toolchain.md) for how to 
 
 ```bash
 bundle install
+bundle exec rake                  # lint (Standard) + whole suite
 bundle exec rake test             # whole suite
 bundle exec rake test:markdown    # the Markdown parser alone
 RUBYOPT=--zjit bundle exec rake test
+bundle exec rake standard:fix     # autofix style
 bundle exec exe/zat --version
 ```
 

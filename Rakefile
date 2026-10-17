@@ -2,6 +2,7 @@
 
 require "bundler/gem_tasks"
 require "minitest/test_task"
+require "standard/rake"
 
 Minitest::TestTask.create(:test) do |t|
   t.test_globs = ["test/**/*_test.rb"]
@@ -14,4 +15,4 @@ namespace :test do
   end
 end
 
-task default: :test
+task default: %i[standard test]

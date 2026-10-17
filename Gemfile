@@ -8,3 +8,4 @@ gemspec
 # first code that uses it.
 gem "minitest", "~> 6.0"
 gem "rake", "~> 13.4"
+gem "standard", "~> 1.57"
