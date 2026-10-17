@@ -17,6 +17,19 @@ class ParseTest < Minitest::Test
     assert_equal 1, Zat::Markdown.parse("Title\n=====\n").children.first.line
   end
 
+  def test_code_blocks_record_how_they_were_written
+    fenced, indented = Zat::Markdown.parse("```ruby  \nputs 1\n```\n\n    x = 1\n").children
+
+    assert_equal({fenced: true, info: "ruby"}, fenced.attrs)
+    assert_equal [1, 5], [fenced.line, indented.line]
+    assert_equal({fenced: false}, indented.attrs)
+  end
+
+  # The spec only exercises partial tabs inside list items, which aren't parsed yet.
+  def test_a_partly_consumed_tab_leaves_its_remaining_width_as_spaces
+    assert_equal "  foo\n", Zat::Markdown.parse("  ```\n\tfoo\n  ```\n").children.first.value
+  end
+
   def test_line_endings_are_normalized
     assert_equal Zat::Markdown.parse("a\nb\nc\n"), Zat::Markdown.parse("a\r\nb\rc\r\n")
   end
