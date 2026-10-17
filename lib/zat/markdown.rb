@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "markdown/node"
+
 module Zat
-  # Markdown parser, designed to be extracted as a standalone gem later.
-  #
-  # Must not depend on anything else under Zat:: — test/markdown/ loads it
-  # without the rest of the project to keep that boundary honest.
+  # Meant to become its own gem: must not require anything else from Zat.
   module Markdown
   end
 end

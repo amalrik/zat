@@ -2,9 +2,9 @@
 
 Render Markdown in the terminal, in pure Ruby: colors, tables, syntax highlighting and inline images, in the spirit of [mdcat](https://github.com/swsnr/mdcat).
 
-Zat is also a lab. It is written to produce empirical feedback on **ZJIT** and **Ractors** for Ruby 4.1, which is why it has its own Markdown parser and zero runtime dependencies (see [the plan](docs/PLANNING.md)).
+Zat is also a lab. It is written to produce empirical feedback on **ZJIT** and **Ractors** for Ruby 4.1, which is why it has its own Markdown parser and zero runtime dependencies (see [decisions](docs/decisions.md)).
 
-> **Status:** early development. Nothing renders yet — follow the [project board](https://github.com/users/amalrik/projects/2).
+> **Status:** early development. Nothing renders yet — see the [roadmap](docs/ROADMAP.md) and the [project board](https://github.com/users/amalrik/projects/2).
 
 ## Requirements
 

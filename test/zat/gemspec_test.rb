@@ -7,7 +7,6 @@ class GemspecTest < Minitest::Test
     @spec = Gem::Specification.load(File.expand_path("../../zat.gemspec", __dir__))
   end
 
-  # The pipeline must run inside Ractors; see docs/PLANNING.md §0.
   def test_has_no_runtime_dependencies
     assert_empty @spec.runtime_dependencies.map(&:name)
   end

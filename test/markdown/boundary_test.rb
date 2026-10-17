@@ -3,8 +3,7 @@
 require "test_helper"
 require "open3"
 
-# Zat::Markdown is meant to become its own gem, so it must load without the
-# rest of Zat. Checked in a fresh process because `rake test` loads everything.
+# Needs a fresh process: `rake test` has already loaded all of Zat.
 class MarkdownBoundaryTest < Minitest::Test
   LIB = File.expand_path("../../lib", __dir__)
 
@@ -13,13 +12,12 @@ class MarkdownBoundaryTest < Minitest::Test
     out, err, status = unbundled { Open3.capture3(RbConfig.ruby, "-I", LIB, "-e", script) }
 
     assert_predicate status, :success?, err
-    assert_equal "[:Markdown]", out
+    assert_equal "[:Markdown]", out, "zat/markdown loaded other parts of Zat"
   end
 
   private
 
-  # Under `bundle exec`, Bundler evaluates zat.gemspec in every child process,
-  # which loads zat/version. Restoring the pre-Bundler environment avoids that
-  # and keeps the caller's own RUBYOPT (e.g. --zjit).
+  # Under `bundle exec`, Bundler evaluates zat.gemspec in child processes, which
+  # loads zat/version. The unbundled env avoids that and keeps RUBYOPT's --zjit.
   def unbundled(&) = defined?(Bundler) ? Bundler.with_unbundled_env(&) : yield
 end
