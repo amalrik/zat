@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint (Standard)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "4.1.0-preview1"
+          bundler-cache: true
+      - run: bundle exec rake standard
+
+  test:
+    name: Ruby ${{ matrix.ruby }} ${{ matrix.jit.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["4.1.0-preview1"]
+        jit:
+          - { name: interp, rubyopt: "" }
+          - { name: zjit, rubyopt: "--zjit" }
+          - { name: zjit-t1, rubyopt: "--zjit --zjit-call-threshold=1" }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      # Fail loudly if the Ruby build lacks ZJIT, instead of silently
+      # running the "zjit" jobs on the interpreter.
+      - name: Verify JIT
+        if: matrix.jit.rubyopt != ''
+        env:
+          RUBYOPT: ${{ matrix.jit.rubyopt }}
+        run: ruby -e 'abort "ZJIT not available in this Ruby build" unless defined?(RubyVM::ZJIT) && RubyVM::ZJIT.enabled?; puts RUBY_DESCRIPTION'
+      - name: Test
+        env:
+          RUBYOPT: ${{ matrix.jit.rubyopt }}
+        run: bundle exec rake test
+      - name: Test Zat::Markdown in isolation
+        env:
+          RUBYOPT: ${{ matrix.jit.rubyopt }}
+        run: bundle exec rake test:markdown
+      - name: Build gem
+        if: matrix.jit.name == 'interp'
+        run: gem build --strict zat.gemspec

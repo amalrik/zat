@@ -62,9 +62,9 @@ issues.each do |issue|
     body.write(issue.body)
     body.flush
     run("gh", "issue", "create",
-        "--title", issue.title,
-        "--body-file", body.path,
-        "--milestone", issue.milestone,
-        *issue.labels.flat_map { |l| ["--label", l] })
+      "--title", issue.title,
+      "--body-file", body.path,
+      "--milestone", issue.milestone,
+      *issue.labels.flat_map { |l| ["--label", l] })
   end
 end

@@ -19,3 +19,4 @@ Keep any code from quietly starting to depend on global state. This guard lands 
 - [ ] The test passes, and fails on purpose when someone adds a cache in a class-level instance variable (a test of the test)
 - [ ] The lint is part of `rake test`
 - [ ] Documented in `CONTRIBUTING.md`
+- [ ] Remove `test/zat/gemspec_test.rb`: once this test runs the whole pipeline inside a Ractor, any Ractor-unsafe dependency fails here, which makes the "no runtime dependencies" check redundant
