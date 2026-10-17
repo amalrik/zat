@@ -1,7 +1,7 @@
 # Zat — Engineering Plan
 
 > A pure-Ruby clone of `mdcat`, with its own Markdown parser, and a measurement lab for **ZJIT** and **Ractors** on Ruby 4.1.
-> Revised 2026-10-17. Issues: [#1–#32](https://github.com/amalrik/zat/issues) (sources in [`docs/issues/`](issues/); `Z-NN` = issue `#NN`).
+> Revised 2026-10-17. Work items live in [GitHub issues](https://github.com/amalrik/zat/issues) and the project board; this page doesn't copy them.
 > Project board: <https://github.com/users/amalrik/projects/2>
 
 ---
@@ -207,62 +207,14 @@ The 4.0.7 hypothesis (string allocation doesn't scale across Ractors) **did not 
 
 ---
 
-## 4. GitHub: labels, milestones, Project
+## 4. Critical path
 
-### 4.1 Milestones
-
-| Milestone | Issues |
-|---|---|
-| `M0 · Foundation` | #1 – #5 |
-| `M1 · MVP` | #6 – #13 |
-| `M2 · Advanced experience` | #14 – #17 |
-| `M3 · Modern protocols` | #18 – #21 |
-| `Lab · ZJIT` | #22 – #29 |
-| `Lab · Ractors` | #30 – #32 |
-
-### 4.2 Labels
-
-| Label | Color | Use |
-|---|---|---|
-| `milestone:setup` `milestone:mvp` `milestone:advanced` `milestone:protocols` | `#0E8A16` | Mirror the milestones |
-| `area:cli` `area:parser` `area:renderer` `area:terminal` `area:text` `area:tables` `area:syntax` `area:images` | `#1D76DB` | Component |
-| `area:infra` `area:tests` `area:performance` | `#5319E7` | Cross-cutting |
-| `experiment:zjit` | `#D93F0B` | Produces or consumes ZJIT data |
-| `experiment:ractor` | `#E99695` | Produces or consumes Ractor data |
-| `zjit:hot-path` | `#FBCA04` | Shows up in profiles; changes need `rake bench:quick` |
-| `ractor-safety` | `#F9D0C4` | Touches constants or shared state |
-| `gem:markdown` | `#BFDADC` | Code of the future `Zat::Markdown` gem |
-| `type:feature` `type:chore` `type:research` | `#C5DEF5` | Kind of work |
-| `blocked` | `#B60205` | External dependency |
-
-### 4.3 GitHub Project
-
-Project **"Zat"** fields:
-
-| Field | Type | Values |
-|---|---|---|
-| Status | Single select | `Backlog` · `Ready` · `In progress` · `In review` · `Done` |
-| Track | Single select | `Product` · `Parser` · `Lab ZJIT` · `Lab Ractors` |
-| Size | Single select | `S` (≤½ day) · `M` (1–2 days) · `L` (3+ days) |
-| JIT impact | Single select | `Hot path` · `Neutral` · `N/A` |
-| Iteration | Iteration | 2 weeks |
-| Depends on | Text | `#N` |
-
-Views:
-
-1. **Kanban:** board by `Status`, swimlanes by `Track`.
-2. **By milestone:** table grouped by milestone, sorted by number.
-3. **Timeline:** roadmap by `Iteration`. Labs run in parallel from the end of M1.
-4. **Findings:** table filtered by `experiment:zjit` or `experiment:ractor`.
-
-Workflows: item added → `Backlog`; PR linked → `In review`; issue closed → `Done`.
-
-### 4.4 Critical path
+Milestones, labels and the issue fields (Track, Size, JIT impact, Depends on) live in the GitHub project.
 
 ```
 #1 ─┬─ #2 ─┬─ #3 ─ #7 ─ #8 ─┬─ #10 ─┬─ #11 ─ … M1
     │      ├─ #4 ───────────┤       └─ #12 ─ #14 (tables)
-    │      ├─ #5 (diff) ────┘
+    │      ├─ #5 (spec) ────┘
     │      └─ #6, #9
     │                  #31 (Ractor-safety in CI from M1)
     ├─ #28 (gem suites under --zjit: can start now)
@@ -272,41 +224,3 @@ Workflows: item added → `Backlog`; PR linked → `In review`; issue closed →
 
 #28 depends only on the toolchain. It can produce the first ZJIT feedback before a single line of the parser exists.
 
----
-
-## 5. Issue index
-
-| # | Title | Milestone |
-|---|---|---|
-| 1 | Toolchain: Ruby 4.1 with ZJIT | M0 |
-| 2 | Project skeleton, Gemfile and CI | M0 |
-| 3 | Record the own-parser decision and the AST contract | M0 |
-| 4 | Golden tests for ANSI output | M0 |
-| 5 | Parser conformance tests (CommonMark/GFM spec) | M0 |
-| 6 | CLI: file and stdin input | M1 |
-| 7 | Block parser | M1 |
-| 8 | Inline parser | M1 |
-| 9 | Terminal, Style and Theme | M1 |
-| 10 | Renderer: basic blocks and inlines | M1 |
-| 11 | Lists and task lists | M1 |
-| 12 | Display width and line wrapping | M1 |
-| 13 | OSC 8 hyperlinks with fallback | M1 |
-| 14 | GFM tables with Unicode borders | M2 |
-| 15 | Syntax highlighting: Prism + own highlighter | M2 |
-| 16 | Light and dark themes | M2 |
-| 17 | Paging via $PAGER | M2 |
-| 18 | Image protocol detection | M3 |
-| 19 | Images via the Kitty graphics protocol | M3 |
-| 20 | Images via iTerm2 inline images | M3 |
-| 21 | Images: fallback and safety | M3 |
-| 22 | Benchmark corpus generator | Lab ZJIT |
-| 23 | In-process warm-up harness | Lab ZJIT |
-| 24 | Per-phase memory and allocation metrics | Lab ZJIT |
-| 25 | ZJIT stats collection | Lab ZJIT |
-| 26 | Comparative runner | Lab ZJIT |
-| 27 | Hot-path microbenchmarks | Lab ZJIT |
-| 28 | Third-party test suites under --zjit | Lab ZJIT |
-| 29 | Findings report and upstream feedback template | Lab ZJIT |
-| 30 | Batch mode with Ractors (--jobs) | Lab Ractors |
-| 31 | Ractor-safety enforced in CI | Lab Ractors |
-| 32 | Ractor scaling and contention benchmark | Lab Ractors |
