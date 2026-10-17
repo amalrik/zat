@@ -20,7 +20,7 @@ def gfm_extension_examples(text)
   lines = text.lines
   until lines.empty?
     line = lines.shift
-    section = line[/\A#+ (.+)/, 1].strip if line.start_with?("#")
+    section = line[/\A#+ (.+)/, 1]&.strip || section
     next unless line.start_with?("#{fence} example")
 
     number += 1

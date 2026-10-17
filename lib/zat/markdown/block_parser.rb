@@ -8,8 +8,10 @@ module Zat
       ATX_HEADING = /\A {0,3}(\#{1,6})(?=[ \t]|\z)(.*)\z/
       ATX_CLOSING_SEQUENCE = /(?:\A|[ \t]+)#+[ \t]*\z/
       SETEXT_UNDERLINE = /\A {0,3}(=+|-+)[ \t]*\z/
+      REPLACEMENT_CHARACTER = 0xFFFD.chr(Encoding::UTF_8).freeze
 
       Paragraph = Struct.new(:line, :lines)
+      private_constant :Paragraph
 
       def self.parse(source) = new(source).parse
 
@@ -27,7 +29,16 @@ module Zat
 
       private
 
-      def normalized_source = @source.gsub(/\r\n?|\0/, "\r\n" => "\n", "\r" => "\n", "\0" => "�")
+      # Other encodings are transcoded, binary is read as UTF-8, and bytes that
+      # aren't valid UTF-8 become U+FFFD, as the spec does for NUL.
+      def normalized_source
+        utf8 = if @source.encoding == Encoding::BINARY
+          String.new(@source, encoding: Encoding::UTF_8)
+        else
+          @source.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: REPLACEMENT_CHARACTER)
+        end
+        utf8.scrub(REPLACEMENT_CHARACTER).gsub(/\r\n?|\0/, "\r\n" => "\n", "\r" => "\n", "\0" => REPLACEMENT_CHARACTER)
+      end
 
       def add_line(line, number)
         if BLANK.match?(line)

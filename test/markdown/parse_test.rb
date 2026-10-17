@@ -21,6 +21,18 @@ class ParseTest < Minitest::Test
     assert_equal Zat::Markdown.parse("a\nb\nc\n"), Zat::Markdown.parse("a\r\nb\rc\r\n")
   end
 
+  def test_invalid_utf8_becomes_the_replacement_character
+    assert_equal "caf\u{FFFD}", first_text("caf\xE9\n")
+  end
+
+  def test_binary_input_is_read_as_utf8
+    assert_equal "café", first_text("café\n".b)
+  end
+
+  def test_other_encodings_are_transcoded
+    assert_equal "café", first_text("café\n".encode("ISO-8859-1"))
+  end
+
   def test_the_tree_is_deeply_frozen
     assert Ractor.shareable?(Zat::Markdown.parse("# a\n\nb\nc\n"))
   end
@@ -32,7 +44,7 @@ class ParseTest < Minitest::Test
   # Spec examples cover behavior; this covers inputs nobody wrote by hand.
   def test_random_input_never_breaks_the_parser
     alphabet = ["#", "*", "-", "_", "=", "+", ">", "`", "~", "|", "[", "]", "(", ")", "!", "<", "&", "\\",
-      "1", ".", "a", "é", " ", " ", "\t", "\n", "\n", "\r"]
+      "1", ".", "a", "é", " ", " ", "\t", "\n", "\n", "\r", "\0", "\xFF"]
     random = Random.new(20261017)
 
     300.times do
@@ -40,4 +52,8 @@ class ParseTest < Minitest::Test
       assert_valid_ast Zat::Markdown.parse(source)
     end
   end
+
+  private
+
+  def first_text(source) = Zat::Markdown.parse(source).children.first.children.first.value
 end
