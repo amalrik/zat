@@ -11,19 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      # No ruby-version: setup-ruby reads it from the repository (mise.toml).
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "4.1.0-preview1"
           bundler-cache: true
       - run: bundle exec rake standard
 
   test:
-    name: Ruby ${{ matrix.ruby }} ${{ matrix.jit.name }}
+    # Branch protection requires these names; keep them free of versions.
+    name: Test (${{ matrix.jit.name }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["4.1.0-preview1"]
         jit:
           - { name: interp, rubyopt: "" }
           - { name: zjit, rubyopt: "--zjit" }
@@ -32,7 +32,6 @@ jobs:
       - uses: actions/checkout@v5
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       # Fail loudly if the Ruby build lacks ZJIT, instead of silently
       # running the "zjit" jobs on the interpreter.
