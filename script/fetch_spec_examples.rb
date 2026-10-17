@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "json"
-require "net/http"
+require "open-uri"
 
 COMMONMARK = "https://spec.commonmark.org/0.31.2/spec.json"
 GFM = "https://raw.githubusercontent.com/github/cmark-gfm/0.29.0.gfm.13/test/spec.txt"
@@ -10,7 +10,7 @@ GFM = "https://raw.githubusercontent.com/github/cmark-gfm/0.29.0.gfm.13/test/spe
 GFM_EXTENSIONS = %w[table strikethrough autolink disabled].freeze
 OUT = File.expand_path("../test/markdown/spec", __dir__)
 
-def fetch(url) = Net::HTTP.get_response(URI(url)).tap(&:value).body.force_encoding("UTF-8")
+def fetch(url) = URI(url).read.force_encoding("UTF-8")
 
 def gfm_extension_examples(text)
   fence = "`" * 32

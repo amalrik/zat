@@ -16,8 +16,7 @@ end
 
 namespace :spec do
   task :load do
-    $LOAD_PATH.unshift File.expand_path("lib", __dir__)
-    require "zat/markdown"
+    require_relative "lib/zat/markdown"
     require_relative "test/markdown/support/spec_suite"
   end
 
@@ -29,10 +28,10 @@ namespace :spec do
   desc "Spec examples passing, per section"
   task report: :load do
     rows = SpecSuite.report
-    width = rows.map { it[1].size }.max
-    rows.each { |spec, section, pass, total| puts format("%-10s %-*s %3d/%-3d", spec, width, section, pass, total) }
-    pass, total = rows.sum { it[2] }, rows.sum { it[3] }
-    puts format("%-10s %-*s %3d/%-3d (%.1f%%)", "total", width, "", pass, total, 100.0 * pass / total)
+    width = rows.map { it.section.size }.max
+    rows.each { puts format("%-10s %-*s %3d/%-3d", it.spec, width, it.section, it.passed, it.total) }
+    passed, total = rows.sum(&:passed), rows.sum(&:total)
+    puts format("%-10s %-*s %3d/%-3d (%.1f%%)", "total", width, "", passed, total, 100.0 * passed / total)
   end
 end
 

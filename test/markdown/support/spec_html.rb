@@ -4,6 +4,7 @@
 # whose output the spec examples were generated with. Test-only: Zat never
 # renders HTML itself.
 class SpecHTML
+  # Not CGI.escapeHTML: it also escapes ', which cmark leaves alone.
   ESCAPES = {"&" => "&amp;", "<" => "&lt;", ">" => "&gt;", '"' => "&quot;"}.freeze
   # cmark leaves these as-is in URLs and percent-encodes everything else.
   HREF_SAFE = /[A-Za-z0-9\-_.+!*'(),%#@?=;:\/$~&\[\]]/
@@ -127,21 +128,22 @@ class SpecHTML
   end
 
   def plain_text(node)
-    node.children.sum("") do |child|
+    node.children.map { |child|
       case child.type
       when :text, :code, :html_inline then child.value
       when :softbreak, :linebreak then "\n"
       else plain_text(child)
       end
-    end
+    }.join
   end
 
   def title(node) = node.attrs[:title] ? %( title="#{escape(node.attrs[:title])}") : ""
 
   def href(url)
-    url.each_char.sum("") { |char| HREF_SAFE.match?(char) ? char : char.bytes.sum("") { |byte| format("%%%02X", byte) } }
-      .gsub("&", "&amp;")
+    url.each_char.map { HREF_SAFE.match?(it) ? it : percent_encode(it) }.join.gsub("&", "&amp;")
   end
+
+  def percent_encode(char) = char.bytes.map { format("%%%02X", it) }.join
 
   def tag(name)
     @out << "<#{name}>"

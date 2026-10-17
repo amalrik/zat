@@ -8,6 +8,8 @@ module SpecSuite
   PASSING = File.join(DIR, "passing.txt")
   SOURCES = {"commonmark" => "commonmark-0.31.2.json", "gfm" => "gfm-0.29-extensions.json"}.freeze
 
+  Row = Data.define(:spec, :section, :passed, :total)
+
   Example = Data.define(:spec, :number, :section, :markdown, :html) do
     def id = "#{spec} #{number}"
     def to_s = "#{id}  #{section}"
@@ -28,7 +30,7 @@ module SpecSuite
   def passes?(example) = render(example) == example.html
 
   def passing_ids
-    File.exist?(PASSING) ? File.readlines(PASSING, chomp: true).map { it.split("  ").first } : []
+    File.exist?(PASSING) ? File.readlines(PASSING).map { it[/\A\w+ \d+/] } : []
   end
 
   def update!
@@ -39,7 +41,7 @@ module SpecSuite
 
   def report
     examples.group_by { [it.spec, it.section] }.map do |(spec, section), group|
-      [spec, section, group.count { passes?(it) }, group.size]
+      Row.new(spec:, section:, passed: group.count { passes?(it) }, total: group.size)
     end
   end
 end

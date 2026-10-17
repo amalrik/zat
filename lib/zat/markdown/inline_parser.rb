@@ -8,10 +8,8 @@ module Zat
       def self.parse(raw)
         return NO_CHILDREN if raw.empty?
 
-        raw.split("\n").each_with_index.flat_map do |line, i|
-          text = Node.new(type: :text, value: line.sub(/[ \t]+\z/, ""))
-          i.zero? ? [text] : [SOFTBREAK, text]
-        end
+        texts = raw.split("\n").map { Node.new(type: :text, value: it.sub(/[ \t]+\z/, "")) }
+        texts.flat_map { [SOFTBREAK, it] }.drop(1)
       end
     end
   end
