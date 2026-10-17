@@ -1,25 +1,26 @@
-<!-- title: Coleta de estatísticas do ZJIT -->
+<!-- title: ZJIT stats collection -->
 <!-- labels: area:performance, experiment:zjit, type:feature -->
 <!-- milestone: Lab · ZJIT -->
-## Objetivo
+## Goal
 
-Registrar o que o ZJIT fez: o que compilou, quanto tempo levou e onde saiu do código compilado.
+Record what ZJIT did: what it compiled, how long it took, and where execution left compiled code.
 
-## Regras
+## Rules
 
-- Execução dedicada com `--zjit-stats`, sempre separada das execuções que medem tempo.
-- Ao fim, grava o snapshot de `RubyVM::ZJIT.stats` em JSON. Se essa API não existir no build, captura a saída que o Ruby imprime ao sair.
-- Interessam principalmente:
-  - o tempo total de compilação;
-  - o número de ISEQs compiladas;
-  - os side exits por motivo;
-  - o tamanho do código gerado;
-  - as instruções não suportadas.
-- Variações de `--zjit-call-threshold`: 1, padrão e alto.
-- `--yjit-stats` só na tabela de referência, com as métricas equivalentes.
+- A dedicated run with `--zjit-stats=stats-zjit.json` (JSON output is native) or `--zjit-stats-quiet` + `RubyVM::ZJIT.stats`, always separate from timed runs.
+- Metrics of particular interest (key names from `docs/toolchain.md`):
+  - `compile_time_ns` and the `compile_hir_*` / `compile_lir_time_ns` phases;
+  - `compiled_iseq_count` and `failed_iseq_count`;
+  - `side_exit_count` and the `exit_*` counters by reason;
+  - `send_fallback_*` and `unspecialized_send_*` (calls ZJIT didn't specialize);
+  - `unhandled_yarv_*` (unsupported instructions);
+  - `code_region_bytes` and `total_mem_bytes`.
+- `--zjit-trace-exits` maps side exits back to Ruby source locations.
+- `--zjit-call-threshold` variations: 1, default (30) and high.
+- `--yjit-stats` only for the equivalent metrics in the reference table.
 
-## Critérios de aceitação
+## Acceptance criteria
 
-- [ ] `rake bench:stats[corpus]` gera `stats-zjit.json`
-- [ ] Os 10 principais motivos de side exit no `mixed-10k`, cada um mapeado ao método Ruby do Zat que o causa
-- [ ] Para cada um desses 10: é limitação conhecida do ZJIT, padrão de código nosso que vale mudar ou candidato a reporte?
+- [ ] `rake bench:stats[corpus]` produces `stats-zjit.json`
+- [ ] Top 10 side-exit reasons on `mixed-10k`, each mapped to the Zat Ruby method that causes it
+- [ ] For each of those 10: a known ZJIT limitation, a code pattern of ours worth changing, or a candidate to report upstream?

@@ -1,21 +1,21 @@
-<!-- title: Testes golden de saída ANSI -->
+<!-- title: Golden tests for ANSI output -->
 <!-- labels: milestone:setup, area:tests, type:chore -->
-<!-- milestone: M0 · Fundação -->
-## Objetivo
+<!-- milestone: M0 · Foundation -->
+## Goal
 
-Regressão visual: cada fixture `.md` tem uma saída esperada `.ansi`, comparada byte a byte.
+Visual regression testing: every `.md` fixture has an expected `.ansi` output, compared byte for byte.
 
-## Regras
+## Rules
 
-- Fixtures em `test/fixtures/<nome>.md`; saídas em `test/fixtures/<nome>.<cols>.ansi`.
-- `Terminal` fixo nos testes: 80 colunas, TrueColor, OSC 8 ligado e sem imagens. O ambiente real nunca vaza.
-- `ZAT_UPDATE_GOLDEN=1 rake test` regrava as saídas esperadas.
-- O diff mostra os escapes de forma legível (`\e[1m`).
+- Fixtures in `test/fixtures/<name>.md`; expected outputs in `test/fixtures/<name>.<cols>.ansi`.
+- Tests use a fixed `Terminal`: 80 columns, truecolor, OSC 8 on, no images. The real environment never leaks in.
+- `ZAT_UPDATE_GOLDEN=1 rake test` rewrites the expected outputs.
+- Diffs show escapes in readable form (`\e[1m`).
 
-## Critérios de aceitação
+## Acceptance criteria
 
-- [ ] Helper `assert_golden(name, columns: 80)`
-- [ ] Modo de atualização
-- [ ] Diff legível
-- [ ] `rake golden:show[nome]` para inspeção visual
-- [ ] Os goldens passam também sob `--zjit` no CI. Uma diferença ali é um bug de compilação candidato a reporte (Z-28)
+- [ ] `assert_golden(name, columns: 80)` helper
+- [ ] Update mode
+- [ ] Readable diff
+- [ ] `rake golden:show[name]` for visual inspection
+- [ ] Goldens also pass under `--zjit` in CI. A difference there is a miscompilation candidate to report (#28)

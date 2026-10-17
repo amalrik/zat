@@ -1,43 +1,43 @@
-<!-- title: Terminal, Style e Theme -->
+<!-- title: Terminal, Style and Theme -->
 <!-- labels: milestone:mvp, area:terminal, ractor-safety, type:feature -->
 <!-- milestone: M1 · MVP -->
-## Objetivo
+## Goal
 
-Separar três responsabilidades: o que o terminal suporta (`Terminal`), como um estilo vira bytes (`Style`) e que estilo cada elemento usa (`Theme`).
+Separate three responsibilities: what the terminal supports (`Terminal`), how a style becomes bytes (`Style`), and which style each element uses (`Theme`).
 
-## Regras
+## Rules
 
 **`Zat::Terminal`**
 
-- Um `Data` resolvido **uma vez**, no Ractor principal, com estes campos:
+- A `Data` resolved **once**, in the main Ractor, with these fields:
   - `tty?`;
-  - `columns`: via `io/console`; depois `$COLUMNS`; por fim 80;
+  - `columns`: from `io/console`, then `$COLUMNS`, then 80;
   - `color_depth`;
   - `hyperlinks?`;
   - `image_protocol`.
-- `color_depth` é decidido nesta ordem:
-  1. `NO_COLOR` definido → `:none`;
-  2. sem TTY e sem `--ansi` → `:none`;
-  3. `COLORTERM` igual a `truecolor` ou `24bit` → `:truecolor`;
-  4. `TERM` contendo `256color` → `:ansi256`;
-  5. caso contrário → `:ansi16`.
-- Pode ser construído com valores explícitos, para os testes.
+- `color_depth` is decided in this order:
+  1. `NO_COLOR` set → `:none`;
+  2. not a TTY and no `--ansi` → `:none`;
+  3. `COLORTERM` is `truecolor` or `24bit` → `:truecolor`;
+  4. `TERM` contains `256color` → `:ansi256`;
+  5. otherwise → `:ansi16`.
+- Can be built with explicit values, for tests.
 
 **`Zat::Style`**
 
-- `Data` com `fg`, `bg`, `bold`, `italic`, `underline`, `strike` e `dim`.
-- `#open(depth)` e `#close` geram as sequências SGR.
-- Quando a profundidade de cor é menor, RGB é convertido para 256 ou 16 cores.
+- A `Data` with `fg`, `bg`, `bold`, `italic`, `underline`, `strike` and `dim`.
+- `#open(depth)` and `#close` emit the SGR sequences.
+- At lower color depths, RGB is downsampled to 256 or 16 colors.
 
 **`Zat::Theme`**
 
-- Mapa congelado de elemento → `Style`.
+- A frozen map from element → `Style`.
 
-Todos os três são shareable, para serem enviados aos workers da Z-30.
+All three are shareable, so they can be sent to the #30 workers.
 
-## Critérios de aceitação
+## Acceptance criteria
 
-- [ ] Detecção de cor testada com ENV simulado
-- [ ] Conversão RGB → 256 → 16 testada
-- [ ] Nenhum escape ANSI fora de `style.rb`
-- [ ] `Ractor.shareable?(terminal)` e `Ractor.shareable?(theme)` são verdadeiros
+- [ ] Color detection tested with a simulated ENV
+- [ ] RGB → 256 → 16 conversion tested
+- [ ] No ANSI escapes outside `style.rb`
+- [ ] `Ractor.shareable?(terminal)` and `Ractor.shareable?(theme)` are both true

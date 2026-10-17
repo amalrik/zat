@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Creates the labels, milestones and issues described in docs/PLANEJAMENTO.md
+# Creates the labels, milestones and issues described in docs/PLANNING.md
 # on the GitHub repository of the current directory, using the `gh` CLI.
 #
 #   ruby script/bootstrap_github.rb           # dry run: prints the commands
@@ -30,10 +30,10 @@ def run(*cmd)
   puts "$ #{cmd.map { |a| a.match?(/\s/) ? a.inspect : a }.join(" ")}"
   return unless APPLY
 
-  system(*cmd) or warn("  falhou (seguindo em frente)")
+  system(*cmd) or warn("  failed (continuing)")
 end
 
-def meta(text, key) = text[/<!-- #{key}: (.+?) -->/, 1] or abort("#{key} ausente")
+def meta(text, key) = text[/<!-- #{key}: (.+?) -->/, 1] or abort("missing #{key}")
 
 issues = Dir[File.join(ISSUES_DIR, "Z-*.md")].sort.map do |file|
   text = File.read(file)
@@ -47,9 +47,9 @@ issues = Dir[File.join(ISSUES_DIR, "Z-*.md")].sort.map do |file|
 end
 
 unknown = issues.flat_map(&:labels).uniq - LABELS.keys
-abort "Labels sem cor definida: #{unknown.join(", ")}" if unknown.any?
+abort "Labels without a color: #{unknown.join(", ")}" if unknown.any?
 
-puts APPLY ? "== Aplicando ==" : "== Dry run (use --apply para executar) =="
+puts APPLY ? "== Applying ==" : "== Dry run (pass --apply to execute) =="
 
 LABELS.each { |name, color| run("gh", "label", "create", name, "--color", color, "--force") }
 

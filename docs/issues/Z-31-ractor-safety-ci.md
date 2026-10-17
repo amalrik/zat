@@ -1,21 +1,21 @@
-<!-- title: Ractor-safety garantida no CI -->
+<!-- title: Ractor-safety enforced in CI -->
 <!-- labels: area:tests, ractor-safety, experiment:ractor, type:chore -->
 <!-- milestone: Lab · Ractors -->
-## Objetivo
+## Goal
 
-Impedir que algum código passe a depender de estado global sem ninguém perceber. Esta guarda entra **no M1**, não depois.
+Keep any code from quietly starting to depend on global state. This guard lands **during M1**, not later.
 
-## Regras
+## Rules
 
-- Teste `test/ractor_safety_test.rb` que:
-  1. roda o pipeline completo (parse, render, realce e tabela) dentro de um `Ractor.new` sobre todas as fixtures golden;
-  2. compara com a saída do Ractor principal;
-  3. verifica `Ractor.shareable?` em todas as constantes de `Zat::` (percorrendo `constants` recursivamente).
-- Lint simples (`rake check:ractor`) que procura escritas em variáveis de instância de classe (`@x ||=` em `self.`/`class << self`) dentro de `lib/`.
-- Roda no CI com e sem `--zjit`.
+- A `test/ractor_safety_test.rb` test that:
+  1. runs the full pipeline (parse, render, highlighting and tables) inside `Ractor.new` over every golden fixture;
+  2. compares the result with the main-Ractor output;
+  3. checks `Ractor.shareable?` on every constant under `Zat::` (walking `constants` recursively).
+- A simple lint (`rake check:ractor`) that looks for writes to class-level instance variables (`@x ||=` inside `self.`/`class << self`) in `lib/`.
+- Runs in CI with and without `--zjit`.
 
-## Critérios de aceitação
+## Acceptance criteria
 
-- [ ] O teste passa e falha de propósito quando alguém introduz um cache em variável de instância de classe (teste do próprio teste)
-- [ ] O lint está integrado ao `rake test`
-- [ ] Documentado em `CONTRIBUTING.md`
+- [ ] The test passes, and fails on purpose when someone adds a cache in a class-level instance variable (a test of the test)
+- [ ] The lint is part of `rake test`
+- [ ] Documented in `CONTRIBUTING.md`
