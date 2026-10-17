@@ -12,7 +12,8 @@
   - N workers receive file paths;
   - each worker reads, parses, renders, and returns the string;
   - the main Ractor writes the outputs in argument order.
-- `--jobs` defaults to the processor count, and only applies when there's more than one file. `--jobs 1` uses no Ractors at all.
+- A fixed pool of N workers, not one Ractor per file. Spawning is cheap (~0.07 ms) and one-per-file matches the pool's throughput; the pool exists for **bounded memory** (N outputs in flight, not one per file) and for **writing results in input order as soon as they're ready**. See the pool entry in `docs/decisions.md`.
+- `--jobs` defaults to the processor count, and only applies when there's more than one file. A single file, or `--jobs 1`, uses no Ractors at all.
 - Images: workers only build the escape sequences; the main Ractor always does the writing.
 - An error in one file doesn't bring down the others and is reported on stderr.
 - Two communication strategies, both implemented for comparison (#32):

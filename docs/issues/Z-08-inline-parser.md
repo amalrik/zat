@@ -25,5 +25,5 @@ Second phase of `Zat::Markdown`: turn the raw text of paragraphs, headings and t
 
 - [ ] The spec's inline sections within the subset pass (#5)
 - [ ] Pathological tests: `*` × 10,000 and nested brackets are not quadratic (spec cases)
-- [ ] Differential test against kramdown with no undocumented divergences
+- [ ] Seeded random input never raises, and every tree passes `assert_valid_ast` (#5)
 - [ ] Works inside a Ractor

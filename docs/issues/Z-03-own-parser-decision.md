@@ -24,11 +24,10 @@ Record why Zat has its own Markdown parser, and define the AST it produces.
    - no global caches.
 5. **Independence:** `Zat::Markdown` references nothing in `Zat::` outside its own namespace, ready for gem extraction.
 6. **Scanning:** idiomatic by default (`StringScanner` where it reads clearly); byte-level variants live in microbenchmarks until the numbers justify switching.
-7. **kramdown** is a development dependency, used as an oracle and a comparison point.
+7. **kramdown** is not a dependency at all (changed in review): the spec examples are the correctness oracle, and benchmarks install it from `bench/Gemfile`.
 
 ## Acceptance criteria
 
 - [x] `docs/decisions.md` entries: own parser and zero dependencies, node model, Ractor-safety, scanning style
 - [x] AST contract as code: `Zat::Markdown::Node` plus `test/markdown/support/ast_schema.rb` with `assert_valid_ast`
-- [x] `script/dump_ast.rb file.md` prints the AST (Zat's from #7 on; kramdown's with `--kramdown`)
 - [x] `docs/ARCHITECTURE.md` and a repo `CLAUDE.md`

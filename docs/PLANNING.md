@@ -15,7 +15,7 @@
 | **ZJIT is the target; YJIT is a reference column only** | ZJIT is YJIT's successor and where feedback matters. YJIT only answers "has ZJIT caught up on this code?" |
 | **Ruby 4.1** (`4.1.0-preview1` today; RC when released, usually December) | ZJIT's target release. Every result records the exact Ruby commit — see [`toolchain.md`](toolchain.md) |
 | **Own Markdown parser** (`Zat::Markdown`), designed to be extracted as a standalone gem | No pure-Ruby Markdown gem runs inside a Ractor (see 0.2), and an own parser turns parsing into Ruby code ZJIT can actually optimize |
-| **kramdown is dev-only**: oracle for differential tests and a benchmark comparison point | Correctness reference without a runtime dependency |
+| **kramdown is not a dependency**: correctness comes from the spec examples; benchmarks install kramdown from `bench/Gemfile` | kramdown isn't CommonMark-compliant, so it's a poor oracle; it's still a useful benchmark comparison |
 | **Zero runtime dependencies** | Rouge and `unicode-display_width` also break in Ractors. Highlighting uses Prism for Ruby (ships with Ruby, Ractor-safe) plus an own table-driven highlighter; display width uses an own table |
 | **Ractors are part of the product** (batch mode, `--jobs N`) | Gives both JIT warm-up and parallelism a real use case |
 
@@ -52,7 +52,7 @@ Caveats: YJIT is not ZJIT, and these were few runs. The numbers show direction, 
 
 | mdcat feature | Zat | Milestone |
 |---|---|---|
-| CommonMark + GFM | **Documented subset** (see 1.2), tested against the spec and kramdown | M1 / M2 |
+| CommonMark + GFM | **Documented subset** (see 1.2), tested against the spec examples | M1 / M2 |
 | Headings, emphasis, lists, quotes, rules, inline code | Yes | M1 |
 | File(s) and stdin | Yes | M1 |
 | OSC 8 hyperlinks | Yes, with numbered fallback | M1 |
@@ -66,7 +66,7 @@ Caveats: YJIT is not ZJIT, and these were few runs. The numbers show direction, 
 
 ### 1.1 Milestones
 
-- **M0 · Foundation**: Ruby 4.1 toolchain with ZJIT, skeleton, parser ADR, golden tests, conformance and differential tests.
+- **M0 · Foundation**: Ruby 4.1 toolchain with ZJIT, skeleton, parser decision and AST contract, golden tests, spec conformance tests.
 - **M1 · MVP**: block and inline parsers, terminal, renderer, lists, wrapping, links.
 - **M2 · Advanced experience**: tables, syntax highlighting, themes, paging.
 - **M3 · Modern protocols**: Kitty and iTerm2 images, fallback and safety rules.
@@ -280,9 +280,9 @@ Workflows: item added → `Backlog`; PR linked → `In review`; issue closed →
 |---|---|---|
 | 1 | Toolchain: Ruby 4.1 with ZJIT | M0 |
 | 2 | Project skeleton, Gemfile and CI | M0 |
-| 3 | ADR: own parser and Ractor-safety rules | M0 |
+| 3 | Record the own-parser decision and the AST contract | M0 |
 | 4 | Golden tests for ANSI output | M0 |
-| 5 | Parser conformance and differential tests | M0 |
+| 5 | Parser conformance tests (CommonMark/GFM spec) | M0 |
 | 6 | CLI: file and stdin input | M1 |
 | 7 | Block parser | M1 |
 | 8 | Inline parser | M1 |

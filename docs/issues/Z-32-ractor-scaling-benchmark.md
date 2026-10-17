@@ -24,6 +24,8 @@ The hypothesis did **not** reproduce on 4.1 for that workload. The lab now check
 | Allocation | Allocation-heavy (`table-heavy`) vs allocation-light (`prose`) profiles, to separate CPU from allocation |
 | ZJIT × Ractors | Is compiled code reused across Ractors, or is warm-up repeated in each worker? |
 | Communication | Path vs content; copy vs `move: true` (#30) |
+| Pool vs per-file | Fixed pool of N vs one Ractor per file: throughput, **peak RSS** and time to first output. Preliminary: they tie on throughput at 1000 files (1170 vs 1250 ms interp, 635 vs 614 ms zjit) |
+| Scaling ceiling | Why ~6x on 16 cores and not 16x? Separate allocation/GC, memory bandwidth and scheduling. This is the question most worth reporting upstream |
 
 ## Metrics
 

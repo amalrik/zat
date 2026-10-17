@@ -17,4 +17,4 @@ See [decisions.md](decisions.md) for why Zat has its own parser.
 |---|---|---|---|
 | HTML blocks and inline HTML | CommonMark 4.6, 6.6 | Parsed (`:html_block`, `:html_inline`) but rendered as dimmed text, never interpreted | A terminal can't render HTML |
 
-*Divergences found by the conformance and differential tests (#5) are added here as they're triaged.*
+*Divergences found by the conformance tests (#5) are added here as they're triaged.*

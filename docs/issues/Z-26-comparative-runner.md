@@ -16,7 +16,7 @@ A single command that runs the full matrix and produces tables ready to publish.
   - N=30, with 3 discarded runs;
   - uses `hyperfine --export-json` when installed, otherwise `Process.spawn`.
 - **`warm` mode:** uses the #23 harness. **`batch` mode:** `zat corpus/*.md` in a single process.
-- **Parser comparison:** Zat vs kramdown on the same corpus and matrix.
+- **Parser comparison:** Zat vs kramdown on the same corpus and matrix. `bench/Gemfile` is the only place kramdown is installed.
 - **Statistics:** median, p95, stddev, and speedup over `interp` with a bootstrap 95% CI (fixed seed).
 - `env.json` records:
   - `ruby -v` and the Ruby commit;

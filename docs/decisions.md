@@ -18,7 +18,7 @@ This is history, not law. When evidence contradicts an entry, change direction a
 
 ## 2026-10-17 · Own Markdown parser, zero runtime dependencies
 
-**Decision.** `Zat::Markdown` is our own parser, following the CommonMark spec 0.31.2 and GFM 0.29-gfm, built to be extractable as a gem. Zat has no runtime dependencies. kramdown is used only in development: AST dumps, differential tests (#5) and benchmark comparisons.
+**Decision.** `Zat::Markdown` is our own parser, following the CommonMark spec 0.31.2 and GFM 0.29-gfm, built to be extractable as a gem. Zat has no runtime dependencies, and kramdown isn't even a development dependency: correctness is checked against the official spec examples (#5), and the benchmark comparison against kramdown installs it from its own `bench/Gemfile` (#26).
 
 **Evidence.** Ruby 4.0.7 / 4.1.0-preview1, running each library inside a non-main Ractor:
 
@@ -46,7 +46,7 @@ Under YJIT, kramdown's parse got only ~1.25x faster (regex-bound), so it says li
 
 **Why.**
 - Every node has the same shape, so call sites like `node.children` see one class.
-- The AST is a plain data format, easy to normalize against kramdown and to extract as a gem.
+- The AST is a plain data format, easy to compare in tests and to extract as a gem.
 
 **Rejected.** A class per node type (Prism's approach).
 
@@ -71,6 +71,30 @@ Under YJIT, kramdown's parse got only ~1.25x faster (regex-bound), so it says li
 **Why.** A parser shaped to flatter the JIT would bias every measurement the lab produces.
 
 **Revisit when** a variant wins under ZJIT **and** reads just as well. Then it moves into the parser.
+
+---
+
+## 2026-10-17 · Ractors only for batch mode, through a worker pool
+
+**Decision.** A single document is rendered directly in the main Ractor. With several files, `--jobs N` (default: processor count) fans them out to a pool of N worker Ractors. The pool is there for **bounded memory and ordered, streaming output**, not for speed.
+
+**Evidence** (4.1.0-preview1, 16 cores, synthetic render-like work):
+
+| | interp | zjit |
+|---|---|---|
+| Spawn and join one Ractor | 0.08 ms | 0.07 ms |
+| Message round trip | 10 µs | 11 µs |
+| `zat --version`, process startup | 46 ms | 43 ms |
+| 1000 files: sequential / Ractor per file / pool of 16 | 6705 / 1250 / 1170 ms | 3917 / 614 / 635 ms |
+
+- Ractors are cheap enough that one per file matches the pool on throughput, but 1000 live Ractors hold 1000 outputs at once.
+- A single README renders in a few milliseconds behind ~45 ms of startup, so Ractors can't improve the common case.
+- Batch mode is where they pay, and where the lab gets real data: about 6x on 16 cores, not 16x. #32 investigates why.
+
+**Rejected.**
+- Parallelism inside one document (e.g. inline parsing of paragraphs fanned out, which the frozen AST would allow). It complicates the core for a gain that only shows on huge files; at most an isolated lab experiment.
+
+**Revisit when** #32 shows the pool losing to per-file spawning, or intra-document parallelism paying off on realistic sizes.
 
 ---
 

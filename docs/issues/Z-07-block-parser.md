@@ -29,3 +29,4 @@ First phase of `Zat::Markdown`: turn text into a tree of blocks, following the C
 - [ ] A 100k-line document parses in linear time (sanity test: 10k vs 100k)
 - [ ] `Ractor.new { Zat::Markdown.parse(src) }.value` works
 - [ ] No `require` of code outside `zat/markdown`
+- [ ] `script/dump_ast.rb FILE` prints the AST as an indented tree (moved here from #3)

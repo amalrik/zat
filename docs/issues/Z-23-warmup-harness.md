@@ -22,7 +22,7 @@ Measure the ZJIT warm-up curve iteration by iteration and phase by phase.
   - the warm-up cost;
   - the break-even point against `interp`.
 - `GC.start` runs only before the first iteration.
-- `--parser kramdown` swaps the parse phase for kramdown, for comparison.
+- `--parser kramdown` swaps the parse phase for kramdown, for comparison. kramdown comes from `bench/Gemfile`, never from the main bundle.
 - Optional: `RubyVM::ZJIT.reset_stats!` after stabilizing, to collect steady-state-only stats. `--zjit-trace-compiles` produces a Perfetto trace of the warm-up.
 
 ## Acceptance criteria

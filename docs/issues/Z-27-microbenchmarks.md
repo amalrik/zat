@@ -20,7 +20,7 @@ Isolate idiomatic Ruby patterns and find out where ZJIT helps, where it's neutra
 
 ## Rules
 
-- Same harness as #23 (it measures the curve, not just the mean).
+- Same harness as #23 (it measures the curve, not just the mean). `kramdown_parse` runs with `bench/Gemfile`.
 - All variants of a microbenchmark must produce the same result, and this is checked.
 - For each microbenchmark, the report records the verdict (helps, neutral or hurts) and why, with stats from #25.
 - A variant only goes into product code if it's better under ZJIT **and** just as readable as the current one.

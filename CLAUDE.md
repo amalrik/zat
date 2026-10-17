@@ -13,5 +13,4 @@
 bundle exec rake                          # lint (Standard) + tests
 RUBYOPT=--zjit bundle exec rake test      # tests under ZJIT
 bundle exec rake test:markdown            # parser in isolation
-bundle exec ruby script/dump_ast.rb [--kramdown] FILE
 ```
