@@ -21,6 +21,6 @@ flowchart LR
 - **Ractors only when there's more than one file.** A single document renders in the main Ractor; startup (~45 ms) dwarfs anything parallelism could save there. Batch mode uses a fixed pool for bounded memory and ordered output.
 - **One output buffer per document**, written once. String building is the workload under measurement, so it's kept in one place.
 
-Why things are this way: [decisions.md](decisions.md). The plan and the issue map: [PLANNING.md](PLANNING.md).
+Why things are this way: [decisions.md](decisions.md). What comes next: [ROADMAP.md](ROADMAP.md).
 
 *Update this page in the same PR as any change to the shape above.*
