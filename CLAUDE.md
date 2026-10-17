@@ -13,4 +13,6 @@
 bundle exec rake                          # lint (Standard) + tests
 RUBYOPT=--zjit bundle exec rake test      # tests under ZJIT
 bundle exec rake test:markdown            # parser in isolation
+bundle exec rake spec:report              # spec examples passing, per section
+bundle exec rake spec:update              # after parser changes: refresh passing.txt
 ```
