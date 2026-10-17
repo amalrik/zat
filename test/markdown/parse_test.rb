@@ -38,7 +38,8 @@ class ParseTest < Minitest::Test
   end
 
   def test_parses_inside_a_ractor
-    assert_equal 2, Ractor.new { Zat::Markdown.parse("# a\n\nb\n").children.size }.value
+    # Soft breaks and invalid bytes read constants, which must be shareable.
+    assert_equal 2, Ractor.new { Zat::Markdown.parse("# a\n\nb\nc\xFF\n").children.size }.value
   end
 
   # Spec examples cover behavior; this covers inputs nobody wrote by hand.
