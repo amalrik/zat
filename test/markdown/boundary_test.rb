@@ -10,7 +10,7 @@ class MarkdownBoundaryTest < Minitest::Test
 
   def test_loads_without_the_rest_of_zat
     script = 'require "zat/markdown"; print Zat.constants.sort.inspect'
-    out, err, status = Open3.capture3(env_without_bundler, RbConfig.ruby, "-I", LIB, "-e", script)
+    out, err, status = unbundled { Open3.capture3(RbConfig.ruby, "-I", LIB, "-e", script) }
 
     assert_predicate status, :success?, err
     assert_equal "[:Markdown]", out
@@ -18,10 +18,8 @@ class MarkdownBoundaryTest < Minitest::Test
 
   private
 
-  # `bundle exec` puts -rbundler/setup in RUBYOPT, and Bundler evaluates
-  # zat.gemspec, which loads zat/version. Drop it but keep any JIT flags.
-  def env_without_bundler
-    rubyopt = ENV.fetch("RUBYOPT", "").split.reject { it.start_with?("-r") && it.end_with?("bundler/setup") }
-    { "RUBYOPT" => rubyopt.join(" ") }
-  end
+  # Under `bundle exec`, Bundler evaluates zat.gemspec in every child process,
+  # which loads zat/version. Restoring the pre-Bundler environment avoids that
+  # and keeps the caller's own RUBYOPT (e.g. --zjit).
+  def unbundled(&) = defined?(Bundler) ? Bundler.with_unbundled_env(&) : yield
 end

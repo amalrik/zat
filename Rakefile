@@ -10,7 +10,6 @@ end
 namespace :test do
   # The Markdown parser alone, without the rest of Zat loaded.
   Minitest::TestTask.create(:markdown) do |t|
-    t.test_prelude = 'require "zat/markdown"'
     t.test_globs = ["test/markdown/**/*_test.rb"]
   end
 end

@@ -38,3 +38,6 @@ jobs:
         env:
           RUBYOPT: ${{ matrix.jit.rubyopt }}
         run: bundle exec rake test:markdown
+      - name: Build gem
+        if: matrix.jit.name == 'interp'
+        run: gem build --strict zat.gemspec

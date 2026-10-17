@@ -6,6 +6,7 @@ require "zat"
 
 class CLITest < Minitest::Test
   EXE = File.expand_path("../../exe/zat", __dir__)
+  LIB = File.expand_path("../../lib", __dir__)
 
   def test_version
     out, err, status = zat("--version")
@@ -40,5 +41,5 @@ class CLITest < Minitest::Test
 
   # Runs the real executable in a child process, which inherits RUBYOPT —
   # so under the CI's --zjit jobs the CLI itself runs with ZJIT too.
-  def zat(*args) = Open3.capture3(RbConfig.ruby, EXE, *args)
+  def zat(*args) = Open3.capture3(RbConfig.ruby, "-I", LIB, EXE, *args)
 end
