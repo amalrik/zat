@@ -53,7 +53,7 @@ module Zat
       def add_line(line, number)
         if @fence
           continue_fence(line)
-        elsif @indented_code && (BLANK.match?(line) || indentation(line) >= CODE_INDENT)
+        elsif continues_indented_code?(line)
           @indented_code.lines << remove_indentation(line, CODE_INDENT)
         else
           close_indented_code
@@ -94,12 +94,20 @@ module Zat
       end
 
       def continue_fence(line)
-        closing = FENCE_CLOSING.match(line)
-        if closing && closing[1][0] == @fence.marker[0] && closing[1].size >= @fence.marker.size
+        if closes_fence?(line)
           close_fence
         else
           @fence.lines << remove_indentation(line, @fence.indent)
         end
+      end
+
+      def closes_fence?(line)
+        marker = line[FENCE_CLOSING, 1] or return false
+        marker[0] == @fence.marker[0] && marker.size >= @fence.marker.size
+      end
+
+      def continues_indented_code?(line)
+        @indented_code && (BLANK.match?(line) || indentation(line) >= CODE_INDENT)
       end
 
       def close_fence
