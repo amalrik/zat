@@ -39,7 +39,6 @@ class CLITest < Minitest::Test
 
   private
 
-  # Runs the real executable in a child process, which inherits RUBYOPT —
-  # so under the CI's --zjit jobs the CLI itself runs with ZJIT too.
+  # The child inherits RUBYOPT, so in the --zjit CI jobs the CLI runs under ZJIT too.
   def zat(*args) = Open3.capture3(RbConfig.ruby, "-I", LIB, EXE, *args)
 end

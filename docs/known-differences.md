@@ -2,7 +2,7 @@
 
 Where Zat's Markdown parser deliberately differs from the [CommonMark spec 0.31.2](https://spec.commonmark.org/0.31.2/) and the [GFM spec 0.29-gfm](https://github.github.com/gfm/). The conformance tests (#5) tag the affected spec examples `:known_difference` or `:out_of_scope` and link back here.
 
-See [ADR 0001](adr/0001-own-parser.md) for why Zat has its own parser.
+See [decisions.md](decisions.md) for why Zat has its own parser.
 
 ## Not supported yet
 

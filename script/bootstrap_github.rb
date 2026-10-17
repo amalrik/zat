@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-# Creates the labels, milestones and issues described in docs/PLANNING.md
-# on the GitHub repository of the current directory, using the `gh` CLI.
-#
-#   ruby script/bootstrap_github.rb           # dry run: prints the commands
-#   ruby script/bootstrap_github.rb --apply   # runs them
-
 require "tempfile"
 
 APPLY = ARGV.include?("--apply")

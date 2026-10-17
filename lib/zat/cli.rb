@@ -11,7 +11,6 @@ module Zat
       @err = err
     end
 
-    # Returns the process exit status.
     def run(argv)
       options = parse(argv)
 

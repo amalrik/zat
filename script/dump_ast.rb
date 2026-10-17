@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-# Prints the AST of a Markdown file as an indented tree.
-#
-#   bundle exec ruby script/dump_ast.rb FILE              # Zat::Markdown
-#   bundle exec ruby script/dump_ast.rb --kramdown FILE   # kramdown (GFM)
-
 require "optparse"
 
 parser = :zat
@@ -28,8 +23,6 @@ def dump_zat(node, depth = 0)
   node.children.each { dump_zat(it, depth + 1) }
 end
 
-# kramdown's options carry bookkeeping (source location, encoding, ...)
-# that only adds noise here.
 KRAMDOWN_NOISE = %i[location encoding options abbrev_defs abbrev_attr footnote_count].freeze
 
 def dump_kramdown(element, depth = 0)

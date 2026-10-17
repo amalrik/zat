@@ -4,8 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
-# Development only. kramdown is the reference parser: script/dump_ast.rb
-# now, differential tests (#5) and benchmark comparisons later.
+# kramdown is only a reference for our own parser (docs/decisions.md).
 gem "kramdown", "~> 2.5"
 gem "kramdown-parser-gfm", "~> 1.1"
 gem "minitest", "~> 6.0"

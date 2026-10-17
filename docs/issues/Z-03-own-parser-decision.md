@@ -1,9 +1,11 @@
-<!-- title: ADR: own parser and Ractor-safety rules -->
+<!-- title: Record the own-parser decision and the AST contract -->
 <!-- labels: milestone:setup, area:parser, gem:markdown, ractor-safety, type:research -->
 <!-- milestone: M0 · Foundation -->
 ## Goal
 
-Record in `docs/adr/0001-own-parser.md` why Zat has its own Markdown parser and the rules it follows.
+Record why Zat has its own Markdown parser, and define the AST it produces.
+
+> Changed during review (#34): no ADR series. Decisions go to a single `docs/decisions.md` log (why / why not / revisit when), contracts live in code and tests, and `docs/ARCHITECTURE.md` gives a short overview.
 
 ## Context (measured 2026-10-17, Ruby 4.0.7)
 
@@ -26,6 +28,7 @@ Record in `docs/adr/0001-own-parser.md` why Zat has its own Markdown parser and 
 
 ## Acceptance criteria
 
-- [ ] ADR written with context, decision, alternatives and consequences
-- [ ] Node types and their attributes listed
-- [ ] `script/dump_ast.rb file.md` prints Zat's AST (and kramdown's with `--kramdown`)
+- [x] `docs/decisions.md` entries: own parser and zero dependencies, node model, Ractor-safety, scanning style
+- [x] AST contract as code: `Zat::Markdown::Node` plus `test/markdown/support/ast_schema.rb` with `assert_valid_ast`
+- [x] `script/dump_ast.rb file.md` prints the AST (Zat's from #7 on; kramdown's with `--kramdown`)
+- [x] `docs/ARCHITECTURE.md` and a repo `CLAUDE.md`

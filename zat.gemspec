@@ -27,7 +27,5 @@ Gem::Specification.new do |spec|
   spec.executables = ["zat"]
   spec.require_paths = ["lib"]
 
-  # Zero runtime dependencies, by design: the whole pipeline must run inside
-  # Ractors, and common gems (kramdown, Rouge, unicode-display_width) don't.
-  # test/zat/gemspec_test.rb enforces this.
+  # No runtime dependencies: see docs/decisions.md.
 end
