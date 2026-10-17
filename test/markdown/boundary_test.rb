@@ -13,7 +13,7 @@ class MarkdownBoundaryTest < Minitest::Test
     out, err, status = unbundled { Open3.capture3(RbConfig.ruby, "-I", LIB, "-e", script) }
 
     assert_predicate status, :success?, err
-    assert_equal "[:Markdown]", out
+    assert_equal "[:Markdown]", out, "zat/markdown loaded other parts of Zat"
   end
 
   private

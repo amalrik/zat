@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "markdown/node"
+
 module Zat
   # Markdown parser, designed to be extracted as a standalone gem later.
   #
