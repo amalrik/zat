@@ -10,9 +10,9 @@ module Zat
     DEFAULT_COLUMNS = 80
 
     class << self
-      def detect(io: $stdout, env: ENV, color: :auto)
+      def detect(io: $stdout, env: ENV, color: :auto, columns: nil)
         tty = io.tty?
-        new(tty:, columns: detect_columns(io, tty, env), color_depth: detect_color_depth(tty, env, color))
+        new(tty:, columns: columns || detect_columns(io, tty, env), color_depth: detect_color_depth(tty, env, color))
       end
 
       private
