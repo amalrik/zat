@@ -15,4 +15,6 @@ RUBYOPT=--zjit bundle exec rake test      # tests under ZJIT
 bundle exec rake test:markdown            # parser in isolation
 bundle exec rake spec:report              # spec examples passing, per section
 bundle exec rake spec:update              # after parser changes: refresh passing.txt
+ZAT_UPDATE_GOLDEN=1 bundle exec rake test # after renderer changes: rewrite test/fixtures/*.ansi
+bundle exec rake "golden:show[headings]"  # see a fixture as the golden tests render it
 ```

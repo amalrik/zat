@@ -7,7 +7,7 @@ module Zat
     end
 
     Theme::DARK = Ractor.make_shareable(Theme.new(name: :dark, styles: {
-      heading_1: Terminal::Style.new(fg: 0x61AFEF, bold: true, underline: true),
+      heading_1: Terminal::Style.new(fg: 0x61AFEF, bold: true),
       heading_2: Terminal::Style.new(fg: 0x61AFEF, bold: true),
       heading: Terminal::Style.new(fg: 0x56B6C2, bold: true),
       strong: Terminal::Style.new(bold: true),

@@ -13,7 +13,9 @@ module Zat
         codes.empty? ? "" : "\e[#{codes.join(";")}m"
       end
 
-      def close(depth) = (depth == :none || plain?) ? "" : "\e[0m"
+      def self.reset(depth) = (depth == :none) ? "" : "\e[0m"
+
+      def close(depth) = plain? ? "" : self.class.reset(depth)
 
       def plain? = to_h.values.none?
 

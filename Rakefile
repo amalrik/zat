@@ -35,4 +35,13 @@ namespace :spec do
   end
 end
 
+namespace :golden do
+  desc "Render test/fixtures/NAME.md as the golden tests see it"
+  task :show, [:name, :columns] do |_, args|
+    require_relative "lib/zat"
+    require_relative "test/support/golden"
+    puts Golden.render(args.fetch(:name), columns: Integer(args.fetch(:columns, 80)))
+  end
+end
+
 task default: %i[standard test]
