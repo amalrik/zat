@@ -4,6 +4,10 @@ require "optparse"
 
 module Zat
   class CLI
+    SUCCESS = 0
+    FAILURE = 1
+    USAGE_ERROR = 2
+
     def self.start(argv, out: $stdout, err: $stderr) = new(out:, err:).run(argv)
 
     def initialize(out:, err:)
@@ -16,17 +20,17 @@ module Zat
 
       if options[:help]
         @out.puts parser
-        0
+        SUCCESS
       elsif options[:version]
         @out.puts "zat #{VERSION}"
-        0
+        SUCCESS
       else
         @err.puts "zat: rendering is not implemented yet"
-        1
+        FAILURE
       end
     rescue OptionParser::ParseError => e
       @err.puts "zat: #{e.message}", parser.banner
-      2
+      USAGE_ERROR
     end
 
     private

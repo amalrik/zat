@@ -3,7 +3,13 @@
 module Zat
   class Terminal
     module Palette
+      # xterm's 256-color layout: 16 basic colors, a 6×6×6 cube, then 24 grays (8, 18 … 238).
+      CUBE_START = 16
       CUBE_LEVELS = [0, 95, 135, 175, 215, 255].freeze
+      GRAY_START = 232
+      GRAY_COUNT = 24
+      GRAY_FIRST = 8
+      GRAY_STEP = 10
       # xterm's default RGB for the 16 basic colors, with their SGR foreground codes.
       BASIC = {
         30 => 0x000000, 31 => 0xCD0000, 32 => 0x00CD00, 33 => 0xCDCD00,
@@ -15,14 +21,14 @@ module Zat
       class << self
         def channels(rgb) = [(rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF]
 
-        # Nearest of the 6×6×6 color cube (16–231) and the gray ramp (232–255).
+        # Nearest of the color cube and the gray ramp.
         def xterm256(rgb)
           color = channels(rgb)
           cube = color.map { |v| CUBE_LEVELS.each_index.min_by { (CUBE_LEVELS[it] - v).abs } }
-          gray_step = ((color.sum / 3.0 - 8) / 10).round.clamp(0, 23)
+          gray = ((color.sum.fdiv(color.size) - GRAY_FIRST) / GRAY_STEP).round.clamp(0, GRAY_COUNT - 1)
           candidates = {
-            16 + 36 * cube[0] + 6 * cube[1] + cube[2] => cube.map { CUBE_LEVELS[it] },
-            232 + gray_step => [8 + 10 * gray_step] * 3
+            CUBE_START + cube.reduce(0) { |index, level| index * CUBE_LEVELS.size + level } => cube.map { CUBE_LEVELS[it] },
+            GRAY_START + gray => [GRAY_FIRST + GRAY_STEP * gray] * color.size
           }
           candidates.min_by { |_, candidate| distance(color, candidate) }.first
         end

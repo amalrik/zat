@@ -3,7 +3,12 @@
 require "io/console"
 
 module Zat
-  Terminal = Data.define(:tty, :columns, :color_depth) do
+  Terminal = Data.define(:tty, :columns, :color_depth)
+
+  # Reopened rather than given a Data.define block, whose constants would land on Zat.
+  class Terminal
+    DEFAULT_COLUMNS = 80
+
     class << self
       def detect(io: $stdout, env: ENV, color: :auto)
         tty = io.tty?
@@ -25,12 +30,12 @@ module Zat
 
       def detect_columns(io, tty, env)
         width = begin
-          (tty && io.respond_to?(:winsize)) ? io.winsize[1] : 0
+          (tty && io.respond_to?(:winsize)) ? io.winsize.last : 0
         rescue SystemCallError
           0
         end
         width = env["COLUMNS"].to_i unless width.positive?
-        width.positive? ? width : 80
+        width.positive? ? width : DEFAULT_COLUMNS
       end
     end
 
