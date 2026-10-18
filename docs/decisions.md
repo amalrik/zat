@@ -105,3 +105,22 @@ Under YJIT, kramdown's parse got only ~1.25x faster (regex-bound), so it says li
 **Why.** Since Bundler 1.8, `exe/` holds the executables a gem installs and `bin/` holds the repository's development scripts and binstubs, which `bundle binstubs` can overwrite.
 
 **Revisit when** the user prefers otherwise.
+
+---
+
+## 2026-10-18 · Plain requires, not Zeitwerk
+
+**Decision.** Code loads with plain `require`. Each namespace's entry file (`markdown.rb`, `terminal.rb`, `renderer.rb`) requires that namespace's files, in order; standard-library requires stay in the file that uses them. Everything Zat needs is loaded before any Ractor is spawned.
+
+**Evidence** (Zeitwerk 2.8.3 on 4.1.0-preview1, in a throwaway app):
+
+- `require "zeitwerk"` alone costs about 7 ms, roughly 15% of Zat's ~45 ms startup, which is one of the numbers the lab measures.
+- No `TracePoint`; after loading it leaves nothing on the hot path. Eager-loaded, it worked inside Ractors and under `--zjit`.
+- Lazy loading triggered from several Ractors at once crashes this toolchain (#46, upstream Bug #22440), so it would have to eager-load anyway. That leaves only its naming convention.
+- It would also become a runtime dependency of `Zat::Markdown` once that is extracted as a gem, or leave the project with two loading mechanisms.
+
+Dependencies are fine when they don't get in the way of measuring Ractors and ZJIT. This one wouldn't, but it wouldn't pay for itself either.
+
+**Instead.** A test checks that each file under `lib/` defines the constant its path names: the convention Zeitwerk would enforce, without the gem. It lands with the next change to these files (#7).
+
+**Revisit when** `lib/` passes 40–50 files, or lazy loading starts to matter (e.g. heavy optional parts like image protocols).
