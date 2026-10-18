@@ -37,3 +37,6 @@ module Zat
     def tty? = tty
   end
 end
+
+require_relative "terminal/palette"
+require_relative "terminal/style"
