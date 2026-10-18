@@ -34,7 +34,7 @@ class PathologicalTest < Minitest::Test
       "mismatched openers and closers" => ->(n) { "*a_ " * n },
       "openers and closers multiple of 3" => ->(n) { "a**b" + "c* " * n },
       "nested strong emphasis" => ->(n) { "*a **a " * n + "b" + " a** a*" * n },
-      "one long run" => ->(n) { "*" * n * 10 },
+      "intraword runs" => ->(n) { "a*" * n },
       "strikethrough of mixed lengths" => ->(n) { "~a ~~b " * n }
     }.each { |label, source| assert_linear(label) { source.call(it) } }
   end
