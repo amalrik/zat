@@ -13,6 +13,7 @@ commonmark 17  Backslash escapes
 commonmark 18  Backslash escapes
 commonmark 19  Backslash escapes
 commonmark 20  Backslash escapes
+commonmark 22  Backslash escapes
 commonmark 24  Backslash escapes
 commonmark 25  Entity and numeric character references
 commonmark 26  Entity and numeric character references
@@ -20,6 +21,7 @@ commonmark 27  Entity and numeric character references
 commonmark 28  Entity and numeric character references
 commonmark 29  Entity and numeric character references
 commonmark 30  Entity and numeric character references
+commonmark 32  Entity and numeric character references
 commonmark 34  Entity and numeric character references
 commonmark 35  Entity and numeric character references
 commonmark 36  Entity and numeric character references
@@ -225,6 +227,7 @@ commonmark 400  Emphasis and strong emphasis
 commonmark 401  Emphasis and strong emphasis
 commonmark 402  Emphasis and strong emphasis
 commonmark 403  Emphasis and strong emphasis
+commonmark 404  Emphasis and strong emphasis
 commonmark 405  Emphasis and strong emphasis
 commonmark 406  Emphasis and strong emphasis
 commonmark 407  Emphasis and strong emphasis
@@ -239,8 +242,10 @@ commonmark 415  Emphasis and strong emphasis
 commonmark 416  Emphasis and strong emphasis
 commonmark 417  Emphasis and strong emphasis
 commonmark 418  Emphasis and strong emphasis
+commonmark 419  Emphasis and strong emphasis
 commonmark 420  Emphasis and strong emphasis
 commonmark 421  Emphasis and strong emphasis
+commonmark 422  Emphasis and strong emphasis
 commonmark 423  Emphasis and strong emphasis
 commonmark 424  Emphasis and strong emphasis
 commonmark 425  Emphasis and strong emphasis
@@ -251,6 +256,7 @@ commonmark 429  Emphasis and strong emphasis
 commonmark 430  Emphasis and strong emphasis
 commonmark 431  Emphasis and strong emphasis
 commonmark 432  Emphasis and strong emphasis
+commonmark 433  Emphasis and strong emphasis
 commonmark 434  Emphasis and strong emphasis
 commonmark 435  Emphasis and strong emphasis
 commonmark 436  Emphasis and strong emphasis
@@ -290,6 +296,8 @@ commonmark 469  Emphasis and strong emphasis
 commonmark 470  Emphasis and strong emphasis
 commonmark 471  Emphasis and strong emphasis
 commonmark 472  Emphasis and strong emphasis
+commonmark 473  Emphasis and strong emphasis
+commonmark 474  Emphasis and strong emphasis
 commonmark 475  Emphasis and strong emphasis
 commonmark 476  Emphasis and strong emphasis
 commonmark 477  Emphasis and strong emphasis
@@ -297,15 +305,47 @@ commonmark 478  Emphasis and strong emphasis
 commonmark 479  Emphasis and strong emphasis
 commonmark 480  Emphasis and strong emphasis
 commonmark 481  Emphasis and strong emphasis
+commonmark 482  Links
+commonmark 483  Links
+commonmark 484  Links
+commonmark 485  Links
+commonmark 486  Links
+commonmark 487  Links
 commonmark 488  Links
+commonmark 489  Links
 commonmark 490  Links
 commonmark 491  Links
+commonmark 492  Links
 commonmark 493  Links
 commonmark 494  Links
+commonmark 495  Links
+commonmark 496  Links
 commonmark 497  Links
+commonmark 498  Links
+commonmark 499  Links
+commonmark 500  Links
+commonmark 501  Links
+commonmark 502  Links
+commonmark 503  Links
+commonmark 504  Links
+commonmark 505  Links
+commonmark 506  Links
+commonmark 507  Links
 commonmark 508  Links
+commonmark 509  Links
+commonmark 510  Links
 commonmark 511  Links
+commonmark 512  Links
 commonmark 513  Links
+commonmark 514  Links
+commonmark 515  Links
+commonmark 516  Links
+commonmark 517  Links
+commonmark 518  Links
+commonmark 519  Links
+commonmark 520  Links
+commonmark 521  Links
+commonmark 522  Links
 commonmark 523  Links
 commonmark 524  Links
 commonmark 525  Links
@@ -315,6 +355,13 @@ commonmark 547  Links
 commonmark 548  Links
 commonmark 551  Links
 commonmark 552  Links
+commonmark 572  Images
+commonmark 574  Images
+commonmark 575  Images
+commonmark 578  Images
+commonmark 579  Images
+commonmark 580  Images
+commonmark 581  Images
 commonmark 590  Images
 commonmark 594  Autolinks
 commonmark 595  Autolinks

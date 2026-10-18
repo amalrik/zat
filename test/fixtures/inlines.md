@@ -12,3 +12,6 @@ here.
 
 Emphasis: *italic*, **bold**, ***both***, ~~struck~~, and *nested **bold** back to italic*.
 Leftovers stay literal: snake_case_name, 2 * 3 * 4, ***a**.
+
+Links: [the repo](https://github.com/amalrik/zat "Zat"), [*styled* text](/docs), and ![a logo](logo.png).
+Not links: [no destination], [a] (spaced), \[escaped](x).
