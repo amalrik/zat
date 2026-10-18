@@ -63,8 +63,8 @@ module Zat
     def read(path)
       (path == STDIN_PATH) ? @input.binmode.read : File.binread(path)
     rescue SystemCallError => e
-      # A fresh instance gives the bare reason, without Ruby's " @ rb_sysopen - <path>".
-      @err.puts "zat: #{path}: #{e.class.new.message}"
+      # Rebuilt from errno to drop Ruby's " @ rb_sysopen - <path>" suffix.
+      @err.puts "zat: #{path}: #{SystemCallError.new(nil, e.errno).message}"
       nil
     end
 
