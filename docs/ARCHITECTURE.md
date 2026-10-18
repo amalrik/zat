@@ -17,6 +17,7 @@ flowchart LR
 ```
 
 - **`Zat::Markdown`** is the parser. It knows nothing about terminals and requires nothing else from Zat, so it can become its own gem. `test/markdown/` runs it in isolation.
+- **Folders mirror namespaces.** `lib/zat/terminal/` is the only code that knows escape codes and terminal capabilities; `lib/zat/renderer/` turns the AST into text through a theme; `lib/zat/markdown/` knows neither.
 - **Only the main Ractor touches the environment** (ENV, TTY, files on stdout). Workers get frozen settings and return frozen strings. That's what makes batch mode a matter of fanning out.
 - **Ractors only when there's more than one file.** A single document renders in the main Ractor; startup (~45 ms) dwarfs anything parallelism could save there. Batch mode uses a fixed pool for bounded memory and ordered output.
 - **One output buffer per document**, written once. String building is the workload under measurement, so it's kept in one place.
