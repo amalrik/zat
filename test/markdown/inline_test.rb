@@ -29,6 +29,22 @@ class InlineTest < Minitest::Test
     assert_equal [[:text, "\uFFFD\uFFFD\uFFFD"]], inlines("&#0;&#xD800;&#x110000;")
   end
 
+  def test_emphasis_nests_its_content
+    emph, = Zat::Markdown.parse("*a **b** ~~c~~*").children.first.children
+
+    assert_equal :emph, emph.type
+    assert_equal [[:text, "a "], [:strong, nil], [:text, " "], [:strikethrough, nil]], emph.children.map { [it.type, it.value] }
+  end
+
+  def test_unmatched_delimiters_merge_into_the_text
+    assert_equal [[:text, "*a "], [:emph, nil], [:text, " c_d_e ~~~f~~~ **"]], inlines("*a *b* c_d_e ~~~f~~~ **")
+  end
+
+  def test_leftover_delimiters_stay_outside
+    assert_equal [[:text, "*"], [:strong, nil]], inlines("***a**")
+    assert_equal [[:strong, nil], [:text, "*"]], inlines("**a***")
+  end
+
   private
 
   def inlines(source) = Zat::Markdown.parse(source).children.first.children.map { [it.type, it.value] }

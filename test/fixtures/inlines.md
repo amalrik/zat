@@ -9,3 +9,6 @@ A hard break with spaces
 and with a backslash\
 then a soft one
 here.
+
+Emphasis: *italic*, **bold**, ***both***, ~~struck~~, and *nested **bold** back to italic*.
+Leftovers stay literal: snake_case_name, 2 * 3 * 4, ***a**.

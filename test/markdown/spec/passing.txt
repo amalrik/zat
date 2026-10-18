@@ -7,6 +7,7 @@ commonmark 11  Tabs
 commonmark 12  Backslash escapes
 commonmark 13  Backslash escapes
 commonmark 14  Backslash escapes
+commonmark 15  Backslash escapes
 commonmark 16  Backslash escapes
 commonmark 17  Backslash escapes
 commonmark 18  Backslash escapes
@@ -22,6 +23,7 @@ commonmark 30  Entity and numeric character references
 commonmark 34  Entity and numeric character references
 commonmark 35  Entity and numeric character references
 commonmark 36  Entity and numeric character references
+commonmark 37  Entity and numeric character references
 commonmark 39  Entity and numeric character references
 commonmark 40  Entity and numeric character references
 commonmark 41  Entity and numeric character references
@@ -38,12 +40,14 @@ commonmark 52  Thematic breaks
 commonmark 53  Thematic breaks
 commonmark 54  Thematic breaks
 commonmark 55  Thematic breaks
+commonmark 56  Thematic breaks
 commonmark 58  Thematic breaks
 commonmark 59  Thematic breaks
 commonmark 62  ATX headings
 commonmark 63  ATX headings
 commonmark 64  ATX headings
 commonmark 65  ATX headings
+commonmark 66  ATX headings
 commonmark 67  ATX headings
 commonmark 68  ATX headings
 commonmark 69  ATX headings
@@ -57,6 +61,9 @@ commonmark 76  ATX headings
 commonmark 77  ATX headings
 commonmark 78  ATX headings
 commonmark 79  ATX headings
+commonmark 80  Setext headings
+commonmark 81  Setext headings
+commonmark 82  Setext headings
 commonmark 83  Setext headings
 commonmark 84  Setext headings
 commonmark 85  Setext headings
@@ -114,6 +121,7 @@ commonmark 144  Fenced code blocks
 commonmark 145  Fenced code blocks
 commonmark 146  Fenced code blocks
 commonmark 147  Fenced code blocks
+commonmark 168  HTML blocks
 commonmark 187  HTML blocks
 commonmark 197  Link reference definitions
 commonmark 199  Link reference definitions
@@ -163,49 +171,130 @@ commonmark 346  Code spans
 commonmark 347  Code spans
 commonmark 348  Code spans
 commonmark 349  Code spans
+commonmark 350  Emphasis and strong emphasis
 commonmark 351  Emphasis and strong emphasis
 commonmark 352  Emphasis and strong emphasis
 commonmark 353  Emphasis and strong emphasis
 commonmark 354  Emphasis and strong emphasis
+commonmark 355  Emphasis and strong emphasis
+commonmark 356  Emphasis and strong emphasis
+commonmark 357  Emphasis and strong emphasis
 commonmark 358  Emphasis and strong emphasis
 commonmark 359  Emphasis and strong emphasis
 commonmark 360  Emphasis and strong emphasis
 commonmark 361  Emphasis and strong emphasis
 commonmark 362  Emphasis and strong emphasis
 commonmark 363  Emphasis and strong emphasis
+commonmark 364  Emphasis and strong emphasis
 commonmark 365  Emphasis and strong emphasis
 commonmark 366  Emphasis and strong emphasis
 commonmark 367  Emphasis and strong emphasis
 commonmark 368  Emphasis and strong emphasis
+commonmark 369  Emphasis and strong emphasis
+commonmark 370  Emphasis and strong emphasis
 commonmark 371  Emphasis and strong emphasis
 commonmark 372  Emphasis and strong emphasis
+commonmark 373  Emphasis and strong emphasis
 commonmark 374  Emphasis and strong emphasis
 commonmark 375  Emphasis and strong emphasis
+commonmark 376  Emphasis and strong emphasis
+commonmark 377  Emphasis and strong emphasis
+commonmark 378  Emphasis and strong emphasis
 commonmark 379  Emphasis and strong emphasis
 commonmark 380  Emphasis and strong emphasis
+commonmark 381  Emphasis and strong emphasis
+commonmark 382  Emphasis and strong emphasis
 commonmark 383  Emphasis and strong emphasis
 commonmark 384  Emphasis and strong emphasis
 commonmark 385  Emphasis and strong emphasis
 commonmark 386  Emphasis and strong emphasis
 commonmark 387  Emphasis and strong emphasis
 commonmark 388  Emphasis and strong emphasis
+commonmark 389  Emphasis and strong emphasis
+commonmark 390  Emphasis and strong emphasis
 commonmark 391  Emphasis and strong emphasis
 commonmark 392  Emphasis and strong emphasis
+commonmark 393  Emphasis and strong emphasis
+commonmark 394  Emphasis and strong emphasis
+commonmark 395  Emphasis and strong emphasis
+commonmark 396  Emphasis and strong emphasis
 commonmark 397  Emphasis and strong emphasis
 commonmark 398  Emphasis and strong emphasis
+commonmark 399  Emphasis and strong emphasis
 commonmark 400  Emphasis and strong emphasis
 commonmark 401  Emphasis and strong emphasis
+commonmark 402  Emphasis and strong emphasis
+commonmark 403  Emphasis and strong emphasis
+commonmark 405  Emphasis and strong emphasis
+commonmark 406  Emphasis and strong emphasis
+commonmark 407  Emphasis and strong emphasis
+commonmark 408  Emphasis and strong emphasis
+commonmark 409  Emphasis and strong emphasis
+commonmark 410  Emphasis and strong emphasis
+commonmark 411  Emphasis and strong emphasis
+commonmark 412  Emphasis and strong emphasis
+commonmark 413  Emphasis and strong emphasis
+commonmark 414  Emphasis and strong emphasis
+commonmark 415  Emphasis and strong emphasis
+commonmark 416  Emphasis and strong emphasis
+commonmark 417  Emphasis and strong emphasis
+commonmark 418  Emphasis and strong emphasis
 commonmark 420  Emphasis and strong emphasis
 commonmark 421  Emphasis and strong emphasis
+commonmark 423  Emphasis and strong emphasis
+commonmark 424  Emphasis and strong emphasis
+commonmark 425  Emphasis and strong emphasis
+commonmark 426  Emphasis and strong emphasis
+commonmark 427  Emphasis and strong emphasis
+commonmark 428  Emphasis and strong emphasis
+commonmark 429  Emphasis and strong emphasis
+commonmark 430  Emphasis and strong emphasis
+commonmark 431  Emphasis and strong emphasis
+commonmark 432  Emphasis and strong emphasis
 commonmark 434  Emphasis and strong emphasis
 commonmark 435  Emphasis and strong emphasis
 commonmark 436  Emphasis and strong emphasis
+commonmark 437  Emphasis and strong emphasis
+commonmark 438  Emphasis and strong emphasis
 commonmark 439  Emphasis and strong emphasis
+commonmark 440  Emphasis and strong emphasis
+commonmark 441  Emphasis and strong emphasis
+commonmark 442  Emphasis and strong emphasis
+commonmark 443  Emphasis and strong emphasis
+commonmark 444  Emphasis and strong emphasis
+commonmark 445  Emphasis and strong emphasis
+commonmark 446  Emphasis and strong emphasis
+commonmark 447  Emphasis and strong emphasis
 commonmark 448  Emphasis and strong emphasis
+commonmark 449  Emphasis and strong emphasis
+commonmark 450  Emphasis and strong emphasis
 commonmark 451  Emphasis and strong emphasis
+commonmark 452  Emphasis and strong emphasis
+commonmark 453  Emphasis and strong emphasis
+commonmark 454  Emphasis and strong emphasis
+commonmark 455  Emphasis and strong emphasis
+commonmark 456  Emphasis and strong emphasis
+commonmark 457  Emphasis and strong emphasis
+commonmark 458  Emphasis and strong emphasis
+commonmark 459  Emphasis and strong emphasis
+commonmark 460  Emphasis and strong emphasis
+commonmark 461  Emphasis and strong emphasis
+commonmark 462  Emphasis and strong emphasis
+commonmark 463  Emphasis and strong emphasis
+commonmark 464  Emphasis and strong emphasis
+commonmark 465  Emphasis and strong emphasis
+commonmark 466  Emphasis and strong emphasis
+commonmark 467  Emphasis and strong emphasis
+commonmark 468  Emphasis and strong emphasis
+commonmark 469  Emphasis and strong emphasis
+commonmark 470  Emphasis and strong emphasis
+commonmark 471  Emphasis and strong emphasis
+commonmark 472  Emphasis and strong emphasis
 commonmark 475  Emphasis and strong emphasis
 commonmark 476  Emphasis and strong emphasis
 commonmark 477  Emphasis and strong emphasis
+commonmark 478  Emphasis and strong emphasis
+commonmark 479  Emphasis and strong emphasis
 commonmark 480  Emphasis and strong emphasis
 commonmark 481  Emphasis and strong emphasis
 commonmark 488  Links
@@ -217,6 +306,7 @@ commonmark 497  Links
 commonmark 508  Links
 commonmark 511  Links
 commonmark 513  Links
+commonmark 523  Links
 commonmark 524  Links
 commonmark 525  Links
 commonmark 526  Links
@@ -270,6 +360,8 @@ commonmark 634  Hard line breaks
 commonmark 635  Hard line breaks
 commonmark 636  Hard line breaks
 commonmark 637  Hard line breaks
+commonmark 638  Hard line breaks
+commonmark 639  Hard line breaks
 commonmark 640  Hard line breaks
 commonmark 641  Hard line breaks
 commonmark 642  Hard line breaks
@@ -284,4 +376,5 @@ commonmark 650  Textual content
 commonmark 651  Textual content
 commonmark 652  Textual content
 gfm 203  Tables (extension)
+gfm 491  Strikethrough (extension)
 gfm 492  Strikethrough (extension)

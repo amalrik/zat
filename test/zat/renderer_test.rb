@@ -15,6 +15,10 @@ class RendererTest < Minitest::Test
     assert_equal '\e[1mb\e[3mbi\e[0m\e[1mb\e[0m', render(paragraph(strong))
   end
 
+  def test_styles_are_written_only_with_text
+    assert_equal '\e[3m\e[1mb\e[0m', render(paragraph(node(:emph, node(:strong, text("b")), node(:strong))))
+  end
+
   def test_code_span_strikethrough_and_html_inline
     para = paragraph(node(:code, value: "x"), node(:strikethrough, text("s")), node(:html_inline, value: "<b>"))
 

@@ -2,6 +2,7 @@
 
 require "strscan"
 require_relative "entities"
+require_relative "inline_parser/emphasis"
 
 module Zat
   module Markdown
@@ -12,11 +13,14 @@ module Zat
       MAX_CODEPOINT = 0x10FFFF
       SURROGATES = 0xD800..0xDFFF
 
-      TEXT = /[^\\`&<\n]+/
+      TEXT = /[^\\`&<\n*_~]+/
       ESCAPABLE = /\\(?<escaped>[!-\/:-@\[-`{-~])/
       ENTITY = /&(?:#[xX](?<hex>\h{1,6})|#(?<decimal>\d{1,7})|(?<name>[A-Za-z][A-Za-z0-9]{1,31}));/
       UNESCAPE = /#{ESCAPABLE}|#{ENTITY}/
       BACKTICKS = /`+/
+      DELIMITER_RUN = /\*+|_+|~+/
+      PREVIOUS_CHARACTER = /(?<=(.))/m
+      NEXT_CHARACTER = /./m
       URI_AUTOLINK = /<([A-Za-z][A-Za-z0-9+.-]{1,31}:[^\x00-\x20<>]*)>/
       EMAIL_AUTOLINK = /<([A-Za-z0-9.!#$%&'*+\/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*)>/
 
@@ -57,7 +61,8 @@ module Zat
       end
 
       def initialize(raw)
-        @scanner = StringScanner.new(raw)
+        # Fixed anchor lets lookbehind see the text before the scan position.
+        @scanner = StringScanner.new(raw, fixed_anchor: true)
         @nodes = []
         @text = +""
         @unterminated = []
@@ -74,7 +79,7 @@ module Zat
           end
         end
         flush
-        @nodes
+        Emphasis.process(@nodes)
       end
 
       private
@@ -86,6 +91,7 @@ module Zat
         when "&" then entity
         when "<" then angle_bracket
         when "\n" then line_ending
+        when "*", "_", "~" then delimiter_run
         else raise ArgumentError, "TEXT stopped at #{@scanner.peek(1).inspect}, which has no handler"
         end
       end
@@ -128,6 +134,17 @@ module Zat
         content = content.tr("\n", " ")
         stripped = content.start_with?(" ") && content.end_with?(" ") && !content.match?(/\A +\z/)
         stripped ? content[1..-2] : content
+      end
+
+      def delimiter_run
+        before = @scanner[1] if @scanner.check(PREVIOUS_CHARACTER)
+        run = @scanner.scan(DELIMITER_RUN)
+        delimiter = Emphasis::Delimiter.for(run, before, @scanner.check(NEXT_CHARACTER))
+        if delimiter.can_open || delimiter.can_close
+          add(delimiter)
+        else
+          @text << run
+        end
       end
 
       def entity

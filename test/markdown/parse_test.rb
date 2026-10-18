@@ -52,17 +52,12 @@ class ParseTest < Minitest::Test
 
   # A constant that is merely frozen (say, a frozen Hash of Arrays) only fails once a Ractor reads it.
   def test_every_constant_is_shareable
-    namespaces = [Zat::Markdown] + Zat::Markdown.constants.map { Zat::Markdown.const_get(it) }.grep(Module)
-    unshareable = namespaces.flat_map do |namespace|
-      namespace.constants.reject { Ractor.shareable?(namespace.const_get(it)) }.map { "#{namespace}::#{it}" }
-    end
-
-    assert_empty unshareable
+    assert_empty unshareable_constants(Zat::Markdown)
   end
 
   def test_parses_inside_a_ractor
     # Every construct here reads constants (entities, regexps, shared nodes), which must be shareable.
-    source = "# a\n\nb  \nc\xFF `x` &ouml; &#42; \\* <b> <!-- c --> <https://a.b>\n\n```r&amp;\n```\n"
+    source = "# a\n\nb  \nc\xFF `x` &ouml; &#42; \\* <b> <!-- c --> <https://a.b> *d* __e__ ~~f~~\n\n```r&amp;\n```\n"
     expected = Zat::Markdown.parse(source)
 
     assert_equal expected, Ractor.new(source) { Zat::Markdown.parse(it) }.value
@@ -81,6 +76,14 @@ class ParseTest < Minitest::Test
   end
 
   private
+
+  def unshareable_constants(namespace)
+    namespace.constants.flat_map do |name|
+      value = namespace.const_get(name)
+      found = Ractor.shareable?(value) ? [] : ["#{namespace}::#{name}"]
+      (value.is_a?(Module) && value.name.start_with?("#{namespace}::")) ? found + unshareable_constants(value) : found
+    end
+  end
 
   def first_text(source) = Zat::Markdown.parse(source).children.first.children.first.value
 end
