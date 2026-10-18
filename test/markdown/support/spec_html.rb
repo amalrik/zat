@@ -7,7 +7,7 @@ class SpecHTML
   # Not CGI.escapeHTML: it also escapes ', which cmark leaves alone.
   ESCAPES = {"&" => "&amp;", "<" => "&lt;", ">" => "&gt;", '"' => "&quot;"}.freeze
   # cmark leaves these as-is in URLs and percent-encodes everything else.
-  HREF_SAFE = /[A-Za-z0-9\-_.+!*'(),%#@?=;:\/$~&\[\]]/
+  HREF_SAFE = /[A-Za-z0-9\-_.+!*'(),%#@?=;:\/$~&]/
 
   def self.render(node) = new.render(node)
 
