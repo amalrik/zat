@@ -20,6 +20,7 @@ module Zat
     def render(document, capacity: 0)
       @out = String.new(capacity:, encoding: Encoding::UTF_8)
       @styles = []
+      @applied = []
       @prefixes = []
       @line_start = true
       blocks(document.children)
@@ -71,17 +72,11 @@ module Zat
       end
     end
 
-    # A style closes with a full reset, so whatever is still open gets reopened.
+    # Styles reach the output only with the text they apply to.
     def styled(element)
-      style = @theme[element]
-      @styles << style
-      @out << style.open(@depth) unless @line_start
+      @styles << @theme[element]
       yield
       @styles.pop
-      return if @line_start || (reset = style.close(@depth)).empty?
-
-      @out << reset
-      @styles.each { @out << it.open(@depth) }
     end
 
     def line
@@ -101,6 +96,7 @@ module Zat
         next if line.empty?
 
         start_line if @line_start
+        apply_styles
         @out << (CONTROL.match?(line) ? line.gsub(CONTROL, REPLACEMENT_CHARACTER) : line)
       end
     end
@@ -108,7 +104,18 @@ module Zat
     def start_line
       @line_start = false
       @prefixes.each { |style, mark| @out << style.open(@depth) << mark << style.close(@depth) }
-      @styles.each { @out << it.open(@depth) }
+    end
+
+    # Closing a style takes a full reset, so whatever stays open is reopened.
+    def apply_styles
+      return if @applied == @styles
+
+      unless @styles.first(@applied.size) == @applied
+        @out << Terminal::Style.reset(@depth) unless @applied.all?(&:plain?)
+        @applied = []
+      end
+      @styles.drop(@applied.size).each { @out << it.open(@depth) }
+      @applied = @styles.dup
     end
 
     # Blank lines still carry the prefixes, minus trailing spaces.
@@ -119,7 +126,8 @@ module Zat
           @out << style.open(@depth) << mark << style.close(@depth)
         end
       else
-        @out << Terminal::Style.reset(@depth) unless @styles.all?(&:plain?)
+        @out << Terminal::Style.reset(@depth) unless @applied.all?(&:plain?)
+        @applied = []
       end
       @out << "\n"
       @line_start = true

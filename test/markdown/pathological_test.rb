@@ -26,6 +26,19 @@ class PathologicalTest < Minitest::Test
     assert_linear { |n| "&#x" * n }
   end
 
+  # The emphasis cases from cmark's suite; links and brackets come with them.
+  def test_emphasis_delimiters
+    {
+      "openers without closers" => ->(n) { "_a " * n },
+      "closers without openers" => ->(n) { "a_ " * n },
+      "mismatched openers and closers" => ->(n) { "*a_ " * n },
+      "openers and closers multiple of 3" => ->(n) { "a**b" + "c* " * n },
+      "nested strong emphasis" => ->(n) { "*a **a " * n + "b" + " a** a*" * n },
+      "intraword runs" => ->(n) { "a*" * n },
+      "strikethrough of mixed lengths" => ->(n) { "~a ~~b " * n }
+    }.each { |label, source| assert_linear(label) { source.call(it) } }
+  end
+
   private
 
   def assert_linear(label = nil)

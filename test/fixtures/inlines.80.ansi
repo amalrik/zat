@@ -9,3 +9,6 @@ A hard break with spaces
 and with a backslash
 then a soft one
 here.
+
+Emphasis: [3mitalic[0m, [1mbold[0m, [3m[1mboth[0m, [9mstruck[0m, and [3mnested [1mbold[0m[3m back to italic[0m.
+Leftovers stay literal: snake_case_name, 2 * 3 * 4, *[1ma[0m.

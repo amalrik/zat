@@ -4,7 +4,7 @@ Render Markdown in the terminal, in pure Ruby: colors, tables, syntax highlighti
 
 Zat is also a lab. It is written to produce empirical feedback on **ZJIT** and **Ractors** for Ruby 4.1, which is why it has its own Markdown parser and zero runtime dependencies (see [decisions](docs/decisions.md)).
 
-> **Status:** early development. Headings, paragraphs, code blocks, rules, code spans and autolinks render; lists, quotes, emphasis, links, tables and images don't yet. See the [roadmap](docs/ROADMAP.md) and the [project board](https://github.com/users/amalrik/projects/2).
+> **Status:** early development. Headings, paragraphs, code blocks, rules, code spans, autolinks, emphasis and strikethrough render; lists, quotes, links, tables and images don't yet. See the [roadmap](docs/ROADMAP.md) and the [project board](https://github.com/users/amalrik/projects/2).
 
 ## Requirements
 
