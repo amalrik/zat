@@ -9,20 +9,22 @@ module Zat
       SOFTBREAK = Node.new(type: :softbreak)
       LINEBREAK = Node.new(type: :linebreak)
       REPLACEMENT_CHARACTER = 0xFFFD.chr(Encoding::UTF_8).freeze
+      MAX_CODEPOINT = 0x10FFFF
+      SURROGATES = 0xD800..0xDFFF
 
       TEXT = /[^\\`&<\n]+/
-      ESCAPABLE = /\\([!-\/:-@\[-`{-~])/
-      ENTITY = /&(?:#[xX](\h{1,6})|#(\d{1,7})|([A-Za-z][A-Za-z0-9]{1,31}));/
+      ESCAPABLE = /\\(?<escaped>[!-\/:-@\[-`{-~])/
+      ENTITY = /&(?:#[xX](?<hex>\h{1,6})|#(?<decimal>\d{1,7})|(?<name>[A-Za-z][A-Za-z0-9]{1,31}));/
       UNESCAPE = /#{ESCAPABLE}|#{ENTITY}/
       BACKTICKS = /`+/
       URI_AUTOLINK = /<([A-Za-z][A-Za-z0-9+.-]{1,31}:[^\x00-\x20<>]*)>/
       EMAIL_AUTOLINK = /<([A-Za-z0-9.!#$%&'*+\/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*)>/
 
       # Raw HTML, spec section 6.6. "Whitespace" allows up to one line ending.
-      SPACE = /(?:[ \t]*\n?[ \t]*)/
-      ATTRIBUTE = /#{SPACE}(?<=[ \t\n])[A-Za-z_:][A-Za-z0-9_.:-]*(?:#{SPACE}=#{SPACE}(?:[^ \t\n"'=<>`]+|'[^']*'|"[^"]*"))?/
-      OPEN_TAG = /<[A-Za-z][A-Za-z0-9-]*#{ATTRIBUTE}*#{SPACE}\/?>/
-      CLOSING_TAG = /<\/[A-Za-z][A-Za-z0-9-]*#{SPACE}>/
+      HTML_WHITESPACE = /(?:[ \t]*\n?[ \t]*)/
+      ATTRIBUTE = /#{HTML_WHITESPACE}(?<=[ \t\n])[A-Za-z_:][A-Za-z0-9_.:-]*(?:#{HTML_WHITESPACE}=#{HTML_WHITESPACE}(?:[^ \t\n"'=<>`]+|'[^']*'|"[^"]*"))?/
+      OPEN_TAG = /<[A-Za-z][A-Za-z0-9-]*#{ATTRIBUTE}*#{HTML_WHITESPACE}\/?>/
+      CLOSING_TAG = /<\/[A-Za-z][A-Za-z0-9-]*#{HTML_WHITESPACE}>/
       # These end at a terminator that may never come: a failed search means
       # none exists further on either, so each is searched for at most once.
       UNTIL_TERMINATOR = Ractor.make_shareable({
@@ -37,14 +39,19 @@ module Zat
 
         # Backslash escapes and entities only, for info strings, destinations and titles.
         def unescape(raw)
-          raw.gsub(UNESCAPE) { $1 || decode_entity($2, $3, $4) || $& }
+          raw.gsub(UNESCAPE) do
+            match = Regexp.last_match
+            match[:escaped] || decode_entity(match) || match[0]
+          end
         end
 
-        def decode_entity(hex, decimal, name)
-          return ENTITIES[name] if name
+        # Takes a MatchData or a StringScanner positioned on ENTITY. nil for an
+        # unknown name, which then stays as literal text.
+        def decode_entity(match)
+          return ENTITIES[match[:name]] if match[:name]
 
-          codepoint = hex ? hex.to_i(16) : decimal.to_i
-          valid = codepoint.positive? && codepoint <= 0x10FFFF && !(0xD800..0xDFFF).cover?(codepoint)
+          codepoint = match[:hex] ? match[:hex].to_i(16) : match[:decimal].to_i
+          valid = codepoint.positive? && codepoint <= MAX_CODEPOINT && !SURROGATES.cover?(codepoint)
           valid ? codepoint.chr(Encoding::UTF_8) : REPLACEMENT_CHARACTER
         end
       end
@@ -54,6 +61,8 @@ module Zat
         @nodes = []
         @text = +""
         @unterminated = []
+        # Set up front so every parser has the same shape.
+        @last_backtick_run = nil
       end
 
       def parse
@@ -77,12 +86,13 @@ module Zat
         when "&" then entity
         when "<" then angle_bracket
         when "\n" then line_ending
+        else raise ArgumentError, "TEXT stopped at #{@scanner.peek(1).inspect}, which has no handler"
         end
       end
 
       def backslash
-        if (escaped = @scanner.scan(ESCAPABLE))
-          @text << escaped[1]
+        if @scanner.skip(ESCAPABLE)
+          @text << @scanner[:escaped]
         elsif @scanner.skip("\\\n")
           line_break(LINEBREAK)
         else
@@ -94,17 +104,23 @@ module Zat
       # last position is known up front, so a missing closer costs nothing.
       def code_span
         opener = @scanner.scan(BACKTICKS)
-        closer = /(?<!`)#{opener}(?!`)/
-        if last_backtick_run.fetch(opener.size, -1) >= @scanner.pos && (content = @scanner.scan_until(closer))
+        if closer_ahead?(opener) && (content = @scanner.scan_until(/(?<!`)#{opener}(?!`)/))
           add(Node.new(type: :code, value: code_content(content.delete_suffix(opener))))
         else
           @text << opener
         end
       end
 
+      def closer_ahead?(opener)
+        last = last_backtick_run[opener.size]
+        !last.nil? && last >= @scanner.pos
+      end
+
       def last_backtick_run
-        @last_backtick_run ||= {}.tap do |runs|
-          @scanner.string.scan(BACKTICKS) { runs[$&.size] = $~.byteoffset(0).first }
+        @last_backtick_run ||= begin
+          runs = {}
+          @scanner.string.scan(BACKTICKS) { runs[it.size] = Regexp.last_match.byteoffset(0).first }
+          runs
         end
       end
 
@@ -115,7 +131,7 @@ module Zat
       end
 
       def entity
-        if @scanner.check(ENTITY) && (decoded = self.class.decode_entity(@scanner[1], @scanner[2], @scanner[3]))
+        if @scanner.check(ENTITY) && (decoded = self.class.decode_entity(@scanner))
           @scanner.pos += @scanner.matched_size
           @text << decoded
         else
@@ -124,10 +140,10 @@ module Zat
       end
 
       def angle_bracket
-        if (uri = @scanner.scan(URI_AUTOLINK))
-          autolink(uri[1..-2], uri[1..-2])
-        elsif (email = @scanner.scan(EMAIL_AUTOLINK))
-          autolink("mailto:#{email[1..-2]}", email[1..-2])
+        if @scanner.skip(URI_AUTOLINK)
+          autolink(@scanner[1], @scanner[1])
+        elsif @scanner.skip(EMAIL_AUTOLINK)
+          autolink("mailto:#{@scanner[1]}", @scanner[1])
         elsif (html = raw_html)
           add(Node.new(type: :html_inline, value: html))
         else
@@ -144,23 +160,16 @@ module Zat
       end
 
       def until_terminator
-        UNTIL_TERMINATOR.each do |kind, (pattern, start)|
-          next unless @scanner.peek(start.size) == start
+        kind, (pattern, _) = UNTIL_TERMINATOR.find { |_, (_, start)| @scanner.match?(start) }
+        return if kind.nil? || @unterminated.include?(kind)
 
-          return nil if @unterminated.include?(kind)
-
-          html = @scanner.scan(pattern)
-          @unterminated << kind unless html
-          return html
-        end
-        nil
+        @scanner.scan(pattern).tap { @unterminated << kind unless it }
       end
 
       # Two or more trailing spaces make a hard break; any trailing spaces go.
       def line_ending
-        @scanner.skip(/\n/)
-        trailing = @text[/ *\z/].size
-        @text.slice!(-trailing..) if trailing.positive?
+        @scanner.skip("\n")
+        trailing = @text.slice!(/ +\z/).to_s.size
         line_break((trailing >= 2) ? LINEBREAK : SOFTBREAK)
       end
 

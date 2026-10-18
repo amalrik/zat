@@ -9,7 +9,7 @@ OUT = File.expand_path("../lib/zat/markdown/entities.rb", __dir__)
 
 # CommonMark only recognizes the forms that end in ";".
 entities = JSON.parse(URI(SOURCE).read)
-  .filter_map { |name, entity| [name[1..-2], entity["codepoints"]] if name.end_with?(";") }
+  .filter_map { |name, entity| [name.delete_prefix("&").delete_suffix(";"), entity["codepoints"]] if name.end_with?(";") }
   .sort
 
 lines = entities.map do |name, codepoints|
