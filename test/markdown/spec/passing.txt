@@ -4,13 +4,27 @@ commonmark 3  Tabs
 commonmark 8  Tabs
 commonmark 10  Tabs
 commonmark 11  Tabs
+commonmark 12  Backslash escapes
 commonmark 13  Backslash escapes
+commonmark 14  Backslash escapes
+commonmark 16  Backslash escapes
+commonmark 17  Backslash escapes
 commonmark 18  Backslash escapes
 commonmark 19  Backslash escapes
+commonmark 20  Backslash escapes
+commonmark 24  Backslash escapes
+commonmark 25  Entity and numeric character references
+commonmark 26  Entity and numeric character references
+commonmark 27  Entity and numeric character references
 commonmark 28  Entity and numeric character references
 commonmark 29  Entity and numeric character references
 commonmark 30  Entity and numeric character references
+commonmark 34  Entity and numeric character references
+commonmark 35  Entity and numeric character references
 commonmark 36  Entity and numeric character references
+commonmark 39  Entity and numeric character references
+commonmark 40  Entity and numeric character references
+commonmark 41  Entity and numeric character references
 commonmark 43  Thematic breaks
 commonmark 44  Thematic breaks
 commonmark 45  Thematic breaks
@@ -29,6 +43,7 @@ commonmark 59  Thematic breaks
 commonmark 62  ATX headings
 commonmark 63  ATX headings
 commonmark 64  ATX headings
+commonmark 65  ATX headings
 commonmark 67  ATX headings
 commonmark 68  ATX headings
 commonmark 69  ATX headings
@@ -38,6 +53,7 @@ commonmark 72  ATX headings
 commonmark 73  ATX headings
 commonmark 74  ATX headings
 commonmark 75  ATX headings
+commonmark 76  ATX headings
 commonmark 77  ATX headings
 commonmark 78  ATX headings
 commonmark 79  ATX headings
@@ -55,9 +71,11 @@ commonmark 96  Setext headings
 commonmark 97  Setext headings
 commonmark 98  Setext headings
 commonmark 100  Setext headings
+commonmark 102  Setext headings
 commonmark 103  Setext headings
 commonmark 104  Setext headings
 commonmark 105  Setext headings
+commonmark 106  Setext headings
 commonmark 107  Indented code blocks
 commonmark 110  Indented code blocks
 commonmark 111  Indented code blocks
@@ -70,6 +88,7 @@ commonmark 117  Indented code blocks
 commonmark 118  Indented code blocks
 commonmark 119  Fenced code blocks
 commonmark 120  Fenced code blocks
+commonmark 121  Fenced code blocks
 commonmark 122  Fenced code blocks
 commonmark 123  Fenced code blocks
 commonmark 124  Fenced code blocks
@@ -85,16 +104,20 @@ commonmark 134  Fenced code blocks
 commonmark 135  Fenced code blocks
 commonmark 136  Fenced code blocks
 commonmark 137  Fenced code blocks
+commonmark 138  Fenced code blocks
 commonmark 139  Fenced code blocks
 commonmark 140  Fenced code blocks
 commonmark 141  Fenced code blocks
 commonmark 142  Fenced code blocks
 commonmark 143  Fenced code blocks
 commonmark 144  Fenced code blocks
+commonmark 145  Fenced code blocks
 commonmark 146  Fenced code blocks
 commonmark 147  Fenced code blocks
+commonmark 187  HTML blocks
 commonmark 197  Link reference definitions
 commonmark 199  Link reference definitions
+commonmark 201  Link reference definitions
 commonmark 209  Link reference definitions
 commonmark 211  Link reference definitions
 commonmark 212  Link reference definitions
@@ -106,6 +129,7 @@ commonmark 222  Paragraphs
 commonmark 223  Paragraphs
 commonmark 224  Paragraphs
 commonmark 225  Paragraphs
+commonmark 226  Paragraphs
 commonmark 227  Blank lines
 commonmark 231  Block quotes
 commonmark 261  List items
@@ -116,8 +140,29 @@ commonmark 275  List items
 commonmark 285  List items
 commonmark 289  List items
 commonmark 304  Lists
+commonmark 327  Inlines
+commonmark 328  Code spans
+commonmark 329  Code spans
+commonmark 330  Code spans
+commonmark 331  Code spans
+commonmark 332  Code spans
+commonmark 333  Code spans
+commonmark 334  Code spans
+commonmark 335  Code spans
+commonmark 336  Code spans
+commonmark 337  Code spans
+commonmark 338  Code spans
+commonmark 339  Code spans
+commonmark 340  Code spans
+commonmark 341  Code spans
+commonmark 342  Code spans
+commonmark 343  Code spans
+commonmark 344  Code spans
+commonmark 345  Code spans
+commonmark 346  Code spans
 commonmark 347  Code spans
 commonmark 348  Code spans
+commonmark 349  Code spans
 commonmark 351  Emphasis and strong emphasis
 commonmark 352  Emphasis and strong emphasis
 commonmark 353  Emphasis and strong emphasis
@@ -158,31 +203,77 @@ commonmark 436  Emphasis and strong emphasis
 commonmark 439  Emphasis and strong emphasis
 commonmark 448  Emphasis and strong emphasis
 commonmark 451  Emphasis and strong emphasis
+commonmark 475  Emphasis and strong emphasis
+commonmark 476  Emphasis and strong emphasis
+commonmark 477  Emphasis and strong emphasis
+commonmark 480  Emphasis and strong emphasis
+commonmark 481  Emphasis and strong emphasis
 commonmark 488  Links
 commonmark 490  Links
+commonmark 491  Links
+commonmark 493  Links
+commonmark 494  Links
 commonmark 497  Links
 commonmark 508  Links
 commonmark 511  Links
 commonmark 513  Links
+commonmark 524  Links
+commonmark 525  Links
+commonmark 526  Links
 commonmark 546  Links
 commonmark 547  Links
 commonmark 548  Links
 commonmark 551  Links
 commonmark 552  Links
 commonmark 590  Images
+commonmark 594  Autolinks
+commonmark 595  Autolinks
+commonmark 596  Autolinks
+commonmark 597  Autolinks
+commonmark 598  Autolinks
+commonmark 599  Autolinks
+commonmark 600  Autolinks
+commonmark 601  Autolinks
 commonmark 602  Autolinks
+commonmark 603  Autolinks
+commonmark 604  Autolinks
+commonmark 605  Autolinks
+commonmark 606  Autolinks
 commonmark 607  Autolinks
 commonmark 608  Autolinks
 commonmark 609  Autolinks
 commonmark 610  Autolinks
 commonmark 611  Autolinks
 commonmark 612  Autolinks
+commonmark 613  Raw HTML
+commonmark 614  Raw HTML
+commonmark 615  Raw HTML
+commonmark 616  Raw HTML
+commonmark 617  Raw HTML
 commonmark 618  Raw HTML
 commonmark 619  Raw HTML
 commonmark 620  Raw HTML
 commonmark 621  Raw HTML
 commonmark 622  Raw HTML
+commonmark 623  Raw HTML
 commonmark 624  Raw HTML
+commonmark 625  Raw HTML
+commonmark 626  Raw HTML
+commonmark 627  Raw HTML
+commonmark 628  Raw HTML
+commonmark 629  Raw HTML
+commonmark 630  Raw HTML
+commonmark 631  Raw HTML
+commonmark 632  Raw HTML
+commonmark 633  Hard line breaks
+commonmark 634  Hard line breaks
+commonmark 635  Hard line breaks
+commonmark 636  Hard line breaks
+commonmark 637  Hard line breaks
+commonmark 640  Hard line breaks
+commonmark 641  Hard line breaks
+commonmark 642  Hard line breaks
+commonmark 643  Hard line breaks
 commonmark 644  Hard line breaks
 commonmark 645  Hard line breaks
 commonmark 646  Hard line breaks

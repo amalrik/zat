@@ -50,15 +50,28 @@ class ParseTest < Minitest::Test
     assert Ractor.shareable?(Zat::Markdown.parse("# a\n\nb\nc\n"))
   end
 
+  # A constant that is merely frozen (say, a frozen Hash of Arrays) only fails once a Ractor reads it.
+  def test_every_constant_is_shareable
+    namespaces = [Zat::Markdown] + Zat::Markdown.constants.map { Zat::Markdown.const_get(it) }.grep(Module)
+    unshareable = namespaces.flat_map do |namespace|
+      namespace.constants.reject { Ractor.shareable?(namespace.const_get(it)) }.map { "#{namespace}::#{it}" }
+    end
+
+    assert_empty unshareable
+  end
+
   def test_parses_inside_a_ractor
-    # Soft breaks and invalid bytes read constants, which must be shareable.
-    assert_equal 2, Ractor.new { Zat::Markdown.parse("# a\n\nb\nc\xFF\n").children.size }.value
+    # Every construct here reads constants (entities, regexps, shared nodes), which must be shareable.
+    source = "# a\n\nb  \nc\xFF `x` &ouml; &#42; \\* <b> <!-- c --> <https://a.b>\n\n```r&amp;\n```\n"
+    expected = Zat::Markdown.parse(source)
+
+    assert_equal expected, Ractor.new(source) { Zat::Markdown.parse(it) }.value
   end
 
   # Spec examples cover behavior; this covers inputs nobody wrote by hand.
   def test_random_input_never_breaks_the_parser
     alphabet = ["#", "*", "-", "_", "=", "+", ">", "`", "~", "|", "[", "]", "(", ")", "!", "<", "&", "\\",
-      "1", ".", "a", "é", " ", " ", "\t", "\n", "\n", "\r", "\0", "\xFF"]
+      "1", ".", "a", "é", " ", " ", "\t", "\n", "\n", "\r", "\0", "\xFF", ";", ":", "@", "/", "?", "x"]
     random = Random.new(20261017)
 
     300.times do

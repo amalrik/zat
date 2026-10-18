@@ -1,0 +1,11 @@
+Code spans: [38;2;229;192;123mzat --ansi[0m, [38;2;229;192;123ma ` inside[0m, and [38;2;229;192;123m`[0m alone.
+
+Escapes *stay* literal, entities decode: © © © &nope;
+
+Autolinks [4;38;2;97;175;239mhttps://github.com/amalrik/zat[0m and [4;38;2;97;175;239mdev@example.com[0m,
+inline HTML [2m<kbd>[0mCtrl[2m</kbd>[0m+[2m<kbd>[0mC[2m</kbd>[0m.
+
+A hard break with spaces
+and with a backslash
+then a soft one
+here.
