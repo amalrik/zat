@@ -22,7 +22,7 @@ class InlineTest < Minitest::Test
   end
 
   def test_unescape_handles_escapes_and_entities_only
-    assert_equal "a*b&ö&nope;*", Zat::Markdown::InlineParser.unescape("a\\*b&amp;&ouml;&nope;*")
+    assert_equal "a*b&ö&nope;*", Zat::Markdown::InlineParser::Escapes.unescape("a\\*b&amp;&ouml;&nope;*")
   end
 
   def test_invalid_numeric_references_become_the_replacement_character
