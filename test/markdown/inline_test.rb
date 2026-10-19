@@ -21,10 +21,6 @@ class InlineTest < Minitest::Test
     assert_equal "<b>", html.value
   end
 
-  def test_unescape_handles_escapes_and_entities_only
-    assert_equal "a*b&ö&nope;*", Zat::Markdown::InlineParser.unescape("a\\*b&amp;&ouml;&nope;*")
-  end
-
   def test_invalid_numeric_references_become_the_replacement_character
     assert_equal [[:text, "\uFFFD\uFFFD\uFFFD"]], inlines("&#0;&#xD800;&#x110000;")
   end

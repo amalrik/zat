@@ -90,7 +90,7 @@ module Zat
         indent, marker, info = match.captures
         return if marker.start_with?("`") && info.include?("`")
 
-        Fence.new(number, indent.size, marker, InlineParser.unescape(strip(info)), [])
+        Fence.new(number, indent.size, marker, InlineParser::Escapes.unescape(strip(info)), [])
       end
 
       def continue_fence(line)
