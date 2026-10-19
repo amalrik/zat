@@ -58,7 +58,7 @@ class RendererTest < Minitest::Test
   end
 
   def test_no_escapes_without_color
-    terminal = Zat::Terminal.new(tty: false, columns: 80, color_depth: :none)
+    terminal = Zat::Terminal::Capabilities.new(tty: false, columns: 80, color_depth: :none)
 
     Golden.names.each do |name|
       refute_includes Zat.render(File.read("#{Golden::DIR}/#{name}.md"), terminal:), "\e", name
@@ -81,7 +81,7 @@ class RendererTest < Minitest::Test
   private
 
   def render(*children, depth: :ansi16, columns: 20)
-    terminal = Zat::Terminal.new(tty: true, columns:, color_depth: depth)
+    terminal = Zat::Terminal::Capabilities.new(tty: true, columns:, color_depth: depth)
     out = Zat::Renderer.new(terminal:).render(node(:document, *children, line: 1))
     out.gsub("\e", '\e').delete_suffix((depth == :none) ? "" : "\n")
   end

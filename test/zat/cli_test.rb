@@ -117,5 +117,5 @@ class CLITest < Minitest::Test
 
   def zat(*args, stdin_data: "", env: {}) = Open3.capture3(env, *command(*args), stdin_data:)
 
-  def render(path) = Zat.render(File.read(path), terminal: Zat::Terminal.new(tty: false, columns: 80, color_depth: :none))
+  def render(path) = Zat.render(File.read(path), terminal: Zat::Terminal::Capabilities.new(tty: false, columns: 80, color_depth: :none))
 end

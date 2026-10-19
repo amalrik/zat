@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 require "io/console"
+require_relative "terminal/capabilities"
+require_relative "terminal/palette"
+require_relative "terminal/style"
 
 module Zat
-  Terminal = Data.define(:tty, :columns, :color_depth)
-
-  # Reopened rather than given a Data.define block, whose constants would land on Zat.
-  class Terminal
+  module Terminal
     DEFAULT_COLUMNS = 80
 
     class << self
       def detect(io: $stdout, env: ENV, color: :auto, columns: nil)
         tty = io.tty?
-        new(tty:, columns: columns || detect_columns(io, tty, env), color_depth: detect_color_depth(tty, env, color))
+        Capabilities.new(tty:, columns: columns || detect_columns(io, tty, env), color_depth: detect_color_depth(tty, env, color))
       end
 
       private
@@ -38,12 +38,5 @@ module Zat
         width.positive? ? width : DEFAULT_COLUMNS
       end
     end
-
-    def tty? = tty
   end
 end
-
-# Last, not first: the children reopen `class Terminal`, which must already be
-# the Data class or Ruby would define a plain one.
-require_relative "terminal/palette"
-require_relative "terminal/style"
