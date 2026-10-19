@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Zat
-  class Terminal
+  module Terminal
     module Palette
       # xterm's 256-color layout: 16 basic colors, a 6×6×6 cube, then 24 grays (8, 18 … 238).
       CUBE_START = 16

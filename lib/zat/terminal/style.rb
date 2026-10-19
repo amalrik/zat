@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Zat
-  class Terminal
+  module Terminal
     # Select Graphic Rendition parameters (ECMA-48 §8.3.117).
     module SGR
       RESET = 0

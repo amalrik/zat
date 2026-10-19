@@ -7,7 +7,7 @@ module Golden
 
   def self.names = Dir["#{DIR}/*.md"].map { File.basename(it, ".md") }.sort
 
-  def self.terminal(columns) = Zat::Terminal.new(tty: true, columns:, color_depth: :truecolor)
+  def self.terminal(columns) = Zat::Terminal::Capabilities.new(tty: true, columns:, color_depth: :truecolor)
 
   def self.render(name, columns: 80) = Zat.render(File.read("#{DIR}/#{name}.md"), terminal: terminal(columns))
 
