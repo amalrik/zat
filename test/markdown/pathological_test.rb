@@ -39,6 +39,19 @@ class PathologicalTest < Minitest::Test
     }.each { |label, source| assert_linear(label) { source.call(it) } }
   end
 
+  def test_links_and_brackets
+    {
+      "nested brackets" => ->(n) { "[" * n + "a" + "]" * n },
+      "link closers without openers" => ->(n) { "a]" * n },
+      "link openers without closers" => ->(n) { "[a" * n },
+      "link openers and emphasis closers" => ->(n) { "[ a_" * n },
+      "unclosed destinations" => ->(n) { "[a](b" * n },
+      "unclosed pointy destinations" => ->(n) { "[a](<b" * n },
+      "unclosed titles" => ->(n) { "[a](b \"c" * n },
+      "dead openers under many links" => ->(n) { "[" * n + "[a](b)" * n }
+    }.each { |label, source| assert_linear(label) { source.call(it) } }
+  end
+
   private
 
   def assert_linear(label = nil)

@@ -57,7 +57,7 @@ class ParseTest < Minitest::Test
 
   def test_parses_inside_a_ractor
     # Every construct here reads constants (entities, regexps, shared nodes), which must be shareable.
-    source = "# a\n\nb  \nc\xFF `x` &ouml; &#42; \\* <b> <!-- c --> <https://a.b> *d* __e__ ~~f~~\n\n```r&amp;\n```\n"
+    source = "# a\n\nb  \nc\xFF `x` &ouml; &#42; \\* <b> <!-- c --> <https://a.b> *d* __e__ ~~f~~ [g](h \"i\") ![j](k)\n\n```r&amp;\n```\n"
     expected = Zat::Markdown.parse(source)
 
     assert_equal expected, Ractor.new(source) { Zat::Markdown.parse(it) }.value

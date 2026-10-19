@@ -45,6 +45,28 @@ class InlineTest < Minitest::Test
     assert_equal [[:strong, nil], [:text, "*"]], inlines("**a***")
   end
 
+  def test_links_carry_unescaped_destination_and_title
+    link, = Zat::Markdown.parse('[a *b*](/u\\(1\\)&amp; "t &quot;q&quot;")').children.first.children
+
+    assert_equal({destination: "/u(1)&", title: 't "q"'}, link.attrs)
+    assert_equal [[:text, "a "], [:emph, nil]], link.children.map { [it.type, it.value] }
+  end
+
+  def test_a_link_without_title_omits_it
+    assert_equal({destination: ""}, Zat::Markdown.parse("[a]()").children.first.children.first.attrs)
+  end
+
+  def test_images_keep_their_description_as_children
+    image, = Zat::Markdown.parse("![a [b](c)](d.png)").children.first.children
+
+    assert_equal :image, image.type
+    assert_equal %i[text link], image.children.map(&:type)
+  end
+
+  def test_links_never_nest
+    assert_equal [[:text, "[a "], [:link, nil], [:text, "](d)"]], inlines("[a [b](c)](d)")
+  end
+
   private
 
   def inlines(source) = Zat::Markdown.parse(source).children.first.children.map { [it.type, it.value] }

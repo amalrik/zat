@@ -13,13 +13,20 @@ module Zat
       MAX_CODEPOINT = 0x10FFFF
       SURROGATES = 0xD800..0xDFFF
 
-      TEXT = /[^\\`&<\n*_~]+/
+      TEXT = /[^\\`&<\n*_~\[\]!]+/
       ESCAPABLE = /\\(?<escaped>[!-\/:-@\[-`{-~])/
       ENTITY = /&(?:#[xX](?<hex>\h{1,6})|#(?<decimal>\d{1,7})|(?<name>[A-Za-z][A-Za-z0-9]{1,31}));/
       UNESCAPE = /#{ESCAPABLE}|#{ENTITY}/
       BACKTICKS = /`+/
       DELIMITER_RUN = /\*+|_+|~+/
       PREVIOUS_CHARACTER = /(?<=(.))/m
+      # Link syntax, spec section 6.3. "Spaces" allow up to one line ending.
+      SPACES = /[ \t]*(?:\n[ \t]*)?/
+      POINTY_DESTINATION = /<((?:[^<>\n\\]|\\.)*)>/
+      DESTINATION_TEXT = /(?:[^\x00-\x20()\\\x7F]|\\.?)+/
+      # cmark's limit, which also keeps unclosed destinations linear.
+      MAX_PAREN_DEPTH = 32
+      TITLE = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\((?:[^()\\]|\\.)*\)/m
       NEXT_CHARACTER = /./m
       URI_AUTOLINK = /<([A-Za-z][A-Za-z0-9+.-]{1,31}:[^\x00-\x20<>]*)>/
       EMAIL_AUTOLINK = /<([A-Za-z0-9.!#$%&'*+\/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*)>/
@@ -37,6 +44,9 @@ module Zat
         cdata: [/<!\[CDATA\[.*?\]\]>/m, "<![CDATA["],
         declaration: [/<![A-Za-z][^>]*>/, "<!"]
       })
+
+      # Where a `[` or `![` sits in the node list, until a `]` settles it.
+      Bracket = Data.define(:index, :image)
 
       class << self
         def parse(raw) = raw.empty? ? NO_CHILDREN : new(raw).parse
@@ -66,6 +76,10 @@ module Zat
         @nodes = []
         @text = +""
         @unterminated = []
+        @brackets = []
+        # Links can't contain links: once one closes, every `[` still open
+        # below this height is dead.
+        @dead_below = 0
         # Set up front so every parser has the same shape.
         @last_backtick_run = nil
       end
@@ -92,6 +106,9 @@ module Zat
         when "<" then angle_bracket
         when "\n" then line_ending
         when "*", "_", "~" then delimiter_run
+        when "[" then open_bracket
+        when "!" then @scanner.match?("![") ? open_bracket : @text << @scanner.getch
+        when "]" then close_bracket
         else raise ArgumentError, "TEXT stopped at #{@scanner.peek(1).inspect}, which has no handler"
         end
       end
@@ -145,6 +162,86 @@ module Zat
         else
           @text << run
         end
+      end
+
+      def open_bracket
+        flush
+        bracket = @scanner.scan(/!?\[/)
+        @brackets << Bracket.new(index: @nodes.size, image: bracket.start_with?("!"))
+        @nodes << Node.new(type: :text, value: bracket)
+      end
+
+      def close_bracket
+        @scanner.skip("]")
+        bracket = pop_bracket
+        attrs = inline_link if bracket
+        if attrs
+          add_link(bracket, attrs)
+        else
+          @text << "]"
+        end
+      end
+
+      # The innermost `[` or `![`, unless there is none or it can no longer open a link.
+      def pop_bracket
+        return if @brackets.empty?
+
+        dead = @brackets.size <= @dead_below
+        bracket = @brackets.pop
+        @dead_below = [@dead_below, @brackets.size].min
+        bracket if bracket.image || !dead
+      end
+
+      def add_link(bracket, attrs)
+        flush
+        children = Emphasis.process(@nodes.slice!(bracket.index + 1..))
+        @nodes.pop # the bracket's own text
+        @nodes << Node.new(type: bracket.image ? :image : :link, attrs:, children:)
+        @dead_below = @brackets.size unless bracket.image
+      end
+
+      # `(destination "title")` right after the `]`, or nil with the scanner untouched.
+      def inline_link
+        start = @scanner.pos
+        attrs = link_attrs if @scanner.skip("(")
+        @scanner.pos = start unless attrs
+        attrs
+      end
+
+      def link_attrs
+        @scanner.skip(SPACES)
+        destination = @scanner.match?(")") ? "" : link_destination
+        return unless destination
+
+        spaced = @scanner.skip(SPACES).positive?
+        # Without its quotes or parentheses.
+        title = @scanner.matched[1...-1] if spaced && @scanner.skip(TITLE)
+        @scanner.skip(SPACES)
+        return unless @scanner.skip(")")
+
+        attrs = {destination: self.class.unescape(destination)}
+        attrs[:title] = self.class.unescape(title) if title
+        attrs
+      end
+
+      def link_destination
+        return @scanner[1] if @scanner.skip(POINTY_DESTINATION)
+        return if @scanner.match?("<")
+
+        start = @scanner.pos
+        depth = 0
+        loop do
+          @scanner.skip(DESTINATION_TEXT)
+          if @scanner.skip("(")
+            depth += 1
+            return if depth > MAX_PAREN_DEPTH
+          elsif depth.positive? && @scanner.skip(")")
+            depth -= 1
+          else
+            break
+          end
+        end
+        @scanner.string.byteslice(start...@scanner.pos) if depth.zero? && @scanner.pos > start
       end
 
       def entity
