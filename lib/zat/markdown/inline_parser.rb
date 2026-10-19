@@ -2,6 +2,13 @@
 
 require "strscan"
 require_relative "entities"
+require_relative "inline_parser/escapes"
+require_relative "inline_parser/code_spans"
+require_relative "inline_parser/autolinks"
+require_relative "inline_parser/raw_html"
+require_relative "inline_parser/link_syntax"
+require_relative "inline_parser/brackets"
+require_relative "inline_parser/emphasis"
 
 module Zat
   module Markdown
@@ -134,11 +141,3 @@ module Zat
     end
   end
 end
-
-require_relative "inline_parser/escapes"
-require_relative "inline_parser/code_spans"
-require_relative "inline_parser/autolinks"
-require_relative "inline_parser/raw_html"
-require_relative "inline_parser/link_syntax"
-require_relative "inline_parser/brackets"
-require_relative "inline_parser/emphasis"

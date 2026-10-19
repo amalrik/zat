@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative "emphasis/flanking"
+require_relative "emphasis/delimiter"
+
 module Zat
   module Markdown
     class InlineParser
@@ -102,6 +105,3 @@ module Zat
     end
   end
 end
-
-require_relative "emphasis/flanking"
-require_relative "emphasis/delimiter"

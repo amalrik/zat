@@ -43,5 +43,7 @@ module Zat
   end
 end
 
+# Last, not first: the children reopen `class Terminal`, which must already be
+# the Data class or Ruby would define a plain one.
 require_relative "terminal/palette"
 require_relative "terminal/style"

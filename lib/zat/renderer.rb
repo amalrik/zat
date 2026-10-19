@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "renderer/theme"
+
 module Zat
   # Holds per-document state: build one per document, never share one.
   class Renderer
@@ -136,5 +138,3 @@ module Zat
     def width = [@columns - @prefixes.sum { |_, mark| mark.length }, 1].max
   end
 end
-
-require_relative "renderer/theme"
